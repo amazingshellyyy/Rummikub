@@ -86,6 +86,9 @@ random() from pouch and add to player
 
 In player's rack, sort by number(1 ~13) then by color(Black, Blue, Orange, Red)
 
+### Count and show the tile for Computer, Player and the pubic pouch
+
+Total count of 104(or 106 with joker)
 
 
 ## Tuesday
@@ -136,14 +139,14 @@ sum the value of the tile on the losers rack
 
 CSS
 
-/animation
+/animation if any
 
 ## Stretch goals
 
-1. Timer: each turn have only 2 minutes.
-2. Sorting function: help player rearrange their card by runs or group
-3. Joker
-4. Drag and drop (jquery)
-5. Better and more efficient way for computer
+1. Timer: each turn have only 2 minutes max.
+2. Sorting function: help player rearrange their card by runs or groups
+3. Joker logic, validation and rearrange with joker
+4. Drag and drop (jquery UI) or animation(or sound) of picking and putting the tile
+5. Better and more efficient algorithm for computer(smarter!)
 6. Tutorial slideshows
 
