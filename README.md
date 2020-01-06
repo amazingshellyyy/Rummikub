@@ -13,10 +13,10 @@ A MVP of Rummikub should deal tile automatically, allow user to draw randomly fr
 
 ---
 ### Initial Setting
-1.Player can see the slide show for tutorial of the game or click "start" to enter the game.
-2.On the screen, there will be two tiles facing down. Player will choose either one and the other one represent computer's choice. Whichever is bigger will go first.
+1. Player can see the slide show for tutorial of the game or click "start" to enter the game.
+2. On the screen, there will be two tiles facing down. Player will choose either one and the other one represent computer's choice. Whichever is bigger will go first.
 ![Choose bigger](https://i.imgur.com/CrsunAW.png)
-3.System will deal 14 cards from the public pouch for both player and computer.
+3. System will deal 14 cards from the public pouch for both player and computer.
 
 ---
 ### Contents
