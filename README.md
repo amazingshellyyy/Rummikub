@@ -64,35 +64,36 @@ Play 3 rounds and calculate final score.
 
 
 ---
-**Functions**
+## Functions
 
----
 
-**Monday**
+### Monday
 
 HTML structure
 
 make the grid and make sure the grid can render given tile image
 
-**Initial playground**
+#### Initial playground
 
 3 valid groups and 4 valid runs will be generate automatically
 
-**Deal - 14 tiles each for Both**
+#### Deal - 14 tiles each for Both
 
 Use random() to the pouch array and distribute to player and computer array
 
 sort the player and computer array
 
-**Draw - add tile to user**
+#### Draw - add tile to user**
 
 random() from pouch and add to player
 
 In player's rack, sort by number(1 ~13) then by color(Black, Blue, Orange, Red)
 
-**Tuesday**
+---
 
-**Done - end of each turn**
+### Tuesday
+
+#### Done - end of each turn**
 
 1. check if the rack is empty
     1. yes, announce winner
@@ -102,7 +103,7 @@ In player's rack, sort by number(1 ~13) then by color(Black, Blue, Orange, Red)
         1. less then previous, next turn
         2. no change, draw a tile
 
-**Arrange** 
+#### Arrange
 
 "Pick one, Drop one"
 
@@ -110,33 +111,37 @@ For **Runs, will check if the tile is at its designed place**
 
 For **Groups, will check when click the "Done" button( see validation)**
 
-**Reverse - back to previous stage**
+#### Reverse - back to previous stage
 
 use Object to store previous value(when computer click "Done").
 
 reassign value to current
 
-**Wednesday**
+---
 
-**Computer**
+### Wednesday
+
+#### Computer
 
 1. check if any complete **Runs** or **Groups** on rack
 2. check if can add on tiles in the playground - For Loop
 3. If not, draw one tile from the pouch
 
-**Score**
+#### Score
 
 sum the value of the tile on the losers rack
 
-**Stretch goals**
+#### Stretch goals
 
-**Thursday**
+---
+
+### Thursday
 
 CSS
 
 /animation
 
-**Stretch goals**
+## Stretch goals
 
 1. timer: each turn have only 2 minutes.
 2. sorting function: help player rearrange their card by runs or group
