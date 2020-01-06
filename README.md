@@ -129,7 +129,9 @@ reassign value to current
 
 ### Score
 
-sum the value of the tile on the losers rack
+- sum the value of the tile on the losers rack  
+- store value for rounds and display 
+
 
 ### Stretch goals
 
