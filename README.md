@@ -150,3 +150,21 @@ CSS
 5. Better and more efficient algorithm for computer(smarter!)
 6. Tutorial slideshows
 
+
+## Data Structure
+Computer's rack - []
+Players's rack - []
+playground - Group: [[101,201,301,401],[104,204,304,404],[107,307,407]]
+playground - Run: ["XX234XX789ABCX","123XXXX89AXXXX","123XXXX89AXXXX","123XXXX89AXXXX","123XXXX89AXXXX","123XXXX89AXXXX","123XXXX89AXXXX","123XXXX89AXXXX"]
+    - will be fixed 8 strings inside the array and first two will be black-1 and black-2, and following will be blue-1, blue-2, orange-1, orange-2, red-1,red-2.
+
+for reverse, we are taking a screenshot of the stauts when comupter hit done and store the status in an Object.
+deep copy/clone to prevent polluting the screenshot
+{
+    computerRack: [],
+    playerRack: [],
+    group: [[],[],[],[],[]],
+    run: ["","","","",""],
+    pouch: [],
+    ...
+}
