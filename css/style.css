@@ -1,0 +1,102 @@
+body {
+    background-color: blanchedalmond;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.container1 {
+    display: flex;
+    flex-direction: row;
+    /* justify-content: space-between; */
+    margin: 10px;
+}
+.container2 {
+    display: flex;
+    flex-direction: row;
+    /* justify-content: space-between; */
+}
+.container3 {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-self: flex-end;
+
+}
+
+.computer-info, .player-info {
+    margin: 0 5vw;
+    width: 5vw;
+    /* height: 8vh; */
+    display: flex;
+    flex-direction: column;
+}
+.computer-info p, .player-info p {
+    text-align: center;
+    margin: 0;
+}
+
+.computer-info div, .player-info div {
+    text-align: center;
+    margin-top: 3px;
+}
+.computer-info img, .player-info img {
+    height: 25px;
+}
+.computer-rack, .player-rack {
+    min-height: 60px;
+    width: 40vw;
+    height: 8vh;
+    background-color: blue;
+    display: flex;
+    flex-direction: row;
+    padding: 10px 15px;
+}
+
+.done, .reverse {
+    margin: 0 10px;
+}
+
+.groups {
+    height: 70vh;
+    width: 30vw;
+    border: 1px solid black;
+    margin: 1vh 1.5vw;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    /* padding: 1vh 1vw; */
+}
+
+.group {
+    height: 8.5vh;
+    display: flex;
+    margin-bottom: 1px;
+    flex-direction: row;
+
+}
+.runs {
+    height: 70vh;
+    width: 45vw;
+    border: 1px solid black;
+    margin: 1vh 1.5vw;
+    display: flex;
+    flex-direction: column;
+}
+
+.run {
+    display: flex;
+    flex-direction: row;
+    height: 8.5vh;
+    margin-bottom: 1px;
+}
+.draw {
+    height: 10vh;
+    align-self: flex-end;
+}
+
+.tile {
+    border: 1px solid darkgray;
+    width: 2.8vw;
+    margin-left: 5px;
+}
