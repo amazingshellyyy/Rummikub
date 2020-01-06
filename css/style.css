@@ -45,7 +45,7 @@ body {
 }
 .computer-rack, .player-rack {
     min-height: 60px;
-    width: 40vw;
+    width: 50vw;
     height: 8vh;
     background-color: blue;
     display: flex;
@@ -99,4 +99,12 @@ body {
     border: 1px solid darkgray;
     width: 2.8vw;
     margin-left: 5px;
+    background-image: url("../images/tileBack.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.run .tile {
+    opacity: 0.8;
+    filter: grayscale(60%) brightness(90%);
 }
