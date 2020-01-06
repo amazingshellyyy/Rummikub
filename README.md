@@ -8,6 +8,9 @@
 
 resource: https://en.wikipedia.org/wiki/Rummikub
 
+### MVP Pitch
+A MVP of Rummikub should deal tile automatically, allow user to draw randomly from the pouch by clicking the "+" button, allow user to rearrange tile with both tile on hand and tile in the playground and at the end validate the result. The winner will be the one who empty the rack first and the score will be calculated by the points remain on the losers rack.
+
 ---
 ### Initial Setting
 1.Player can see the slide show for tutorial of the game or click "start" to enter the game.
@@ -143,9 +146,10 @@ CSS
 
 ## Stretch goals
 
-1. timer: each turn have only 2 minutes.
-2. sorting function: help player rearrange their card by runs or group
+1. Timer: each turn have only 2 minutes.
+2. Sorting function: help player rearrange their card by runs or group
 3. Joker
 4. Drag and drop (jquery)
 5. Better and more efficient way for computer
+6. Tutorial slideshows
 
