@@ -15,10 +15,13 @@ resource: https://en.wikipedia.org/wiki/Rummikub
 ![Choose bigger](https://i.imgur.com/CrsunAW.png)
 3.System will deal 14 cards from the public pouch for both player and computer.
 
+---
 ### Contents
 106 tiles (2 sets of tiles numbered 1 to 13 in four colors: black, red, blue, orange; 2 Jokers)
 ![Rummikub tiles](https://i.imgur.com/TWljTkC.png)
 
+
+---
 ### Basic Rule/ Logic
 
 A valid set must be at least 3 tiles.
@@ -29,11 +32,12 @@ A valid set must be at least 3 tiles.
 
 ![RunGroup](https://i.imgur.com/MlcEAOS.png)
 
-
 players will take turn to put tiles in the playground.
 player can build on the sets in the playground.
 All the tile sets on the playground must be valid.
 
+
+---
 ### The Jokers
 ![Jokers](https://i.imgur.com/UuJqcL2.png)
 
@@ -41,6 +45,8 @@ joker card can represent any number in any color.
 
 once the joker is in the playground, anyone can use it by replacing it if all the set are still valid before their turn ends. player must use the joker at that turn.
 
+
+---
 ### Start the Game
 **First turn must break the ice. Players must show more than 30 points at their first turn**
 After breaking the ice, player take turns. if no tile is added to the playground, the player must draw one tile from the public pouch.
@@ -49,7 +55,7 @@ After breaking the ice, player take turns. if no tile is added to the playground
 If add any tile to the playground, no need to draw new tile and the turn is done.
 If didn't add any tile to the playgorund, draw one tile.
 
-
+---
 ### To win
 whoever **empty their rack** first wins. and the total points of the tiles in the losers rack will be the points winner wins and the points loser loses.
 
