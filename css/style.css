@@ -104,7 +104,7 @@ body {
     background-size: cover;
 }
 
-.run .tile {
+.hide{
     opacity: 0.8;
     filter: grayscale(60%) brightness(90%);
 }
