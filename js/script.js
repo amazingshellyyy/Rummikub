@@ -1,7 +1,8 @@
-console.log("Hii It;s working!");
+
 
 /* render the default tile in the playground */
-const charToIndex = {
+/* charToIndex */
+const cTI = {
     '1': "1",
     '2': "2",
     '3': "3",
@@ -15,6 +16,17 @@ const charToIndex = {
     'b': "11",
     'c': "12",
     'd': "13",
+}
+/* rowToColor */
+const rTC = {
+    "1": "1",
+    "2": "1",
+    "3": "2",
+    "4": "2",
+    "5": "3",
+    "6": "3",
+    "7": "4",
+    "8": "4"
 }
 
 const dict = {
@@ -33,15 +45,13 @@ const dict = {
     "13": 'd'
 }
 const publicPouch = [];
-// 11 12 13 .... 1a 1b 1c 1d
-// 21 22 23 .... 2a ....
-// 81 82 ...... . .. . . .8d
+let remainPouch = [];
 const buildPouch = () => {
     for (let i = 1; i <= 8; i++) {
         for (let j = 1; j <= 13; j++) {
             publicPouch.push({
                 "id": `${i}${dict[j]}`,
-                "tile": `<div id="${i}${dict[j]}" class="tile" style="background-image:url('../images/1-0${dict[j]}.svg')"></div>`
+                "tile": `<div id="${i}${dict[j]}" class="tile" style="background-image:url('../images/${rTC[i]}-0${dict[j]}.svg')"></div>`
             });
         }
     }
@@ -82,13 +92,17 @@ const getRoots = () => {
     
 }
 getRoots();
-console.log("used",used);
 console.log("roots",roots);
-const rest = publicPouch.filter(function(item){
-    return used.indexOf(item.id) == -1;
-    // it doesn't exists in the used array === it hasn't been used
-})
-console.log(rest);
+console.log(publicPouch);
+const filterUsed = () => {
+    remainPouch = publicPouch.filter(function(item){
+        return used.indexOf(item.id) == -1;
+        // it doesn't exists in the used array === it hasn't been used
+    })
+    return remainPouch;
+}
+
+
 
 const $groups = $('.groups');
 const $runs = $('.runs');
@@ -184,16 +198,9 @@ const generateRuns = (roots) => {
         $(`#${roots[i].row}${dict[roots[i].column - 1]}`).removeClass("hide");
         $(`#${roots[i].row}${dict[roots[i].column]}`).removeClass("hide");
         $(`#${roots[i].row}${dict[roots[i].column + 1]}`).removeClass("hide");
-        console.log("row",roots[i].row);
-        console.log(roots[i].column);
-        console.log(charToIndex[roots[i].column]);
-        // runBoard[roots[i].row][roots[i].column] = "s";
-        // publicPouch[roots[i].row][roots[i].column] = "s";
     }
     console.log("runBoard", runBoard);
 }
-
-
 
 const generateGroups = (roots) => {
     for (let i = 1; i <= 2; i++) {
@@ -224,24 +231,52 @@ const generateGroups = (roots) => {
     
 }
 
-// const playerTile = [];
-// const generatePlayerTile = () => {
-//     let i = Math.floor(Math.random()*)
-// } 
+const playerTile = [];
+const computerTile = [];
+let randomId = [];
+const generatePlayersTile = () => {
+    for (let i = 0; i < publicPouch.length; i++) {
+        let index = Math.floor(Math.random()*publicPouch.length);
+        let id = publicPouch[index].id;
+        if (used.indexOf(id) == -1) {
+            if (randomId.indexOf(id) == -1) {
+                randomId.push(id);
+                if (randomId.length === 28) {
+                    for (let i = 0; i < randomId.length; i++) {
+                        console.log(i);
+                        if (i%2 === 0) {
+                            computerTile.push(randomId[i]);
+                            used.push(randomId[i]);
+                        } else {
+                            playerTile.push(randomId[i]);
+                            used.push(randomId[i]);
+                        } 
+                    }
+                    break;
+                }
+            } 
+        }
+        
+        //check if the id exist in the used array, if not then 
+        //check if the id exist in the random array, if not then push into random
+        //when randomId array is 28 in length
+        // deal cards to player and computer
+        //break the loop
+    }
+    console.log('com', computerTile);
+    console.log('player', playerTile);
+    console.log('randomId', randomId);
+}
+//need solve = the player and computer is just getting the "id" of the tile not the whole object!
+
 const generatePlayground = () =>{
     generateRuns(roots);
     generateGroups(roots);
-    generatePlayerTile();
+    generatePlayersTile();
 };
 generatePlayground();
-console.log("publicFianl",publicPouch);
-/* Player tile */
-/* let $playerTile = $('.player-rack div');
-let playerTile = [];
-for (let i = 0; i < $playerTile.length; i++) {
-    playerTile.push($playerTile.eq(i));
-    
-}
-console.log(playerTile);
-// Math.floor(Math.random*publicPouch.length);
-$playerTile.eq(3).css("background-image", `url("../images/4/4-011.svg")`); */
+filterUsed();
+console.log("publicPouch", publicPouch)
+console.log("used",used.sort());
+console.log("remainPouch", remainPouch);
+

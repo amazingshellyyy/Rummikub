@@ -72,7 +72,7 @@ make the grid and make sure the grid can render given tile image
 
 ### Initial playground
 
-3 valid groups and 4 valid runs will be generate automatically
+2 valid groups and 4 valid runs will be generate automatically
 
 ### Deal - 14 tiles each for Both
 
