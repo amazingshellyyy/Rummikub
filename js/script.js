@@ -51,7 +51,9 @@ const buildPouch = () => {
         for (let j = 1; j <= 13; j++) {
             publicPouch.push({
                 "id": `${i}${dict[j]}`,
-                "tile": `<div id="${i}${dict[j]}" class="tile" style="background-image:url('../images/${rTC[i]}-0${dict[j]}.svg')"></div>`
+                "tile": `<div id="${i}${dict[j]}" class="tile" style="background-image:url('../images/${rTC[i]}-0${dict[j]}.svg')"></div>`,
+                "color": `${rTC[i]}`,
+                "number": `${dict[j]}`,
             });
         }
     }
@@ -231,8 +233,8 @@ const generateGroups = (roots) => {
     
 }
 
-const playerTile = [];
-const computerTile = [];
+let playerTile = [];
+let computerTile = [];
 let randomId = [];
 const generatePlayersTile = () => {
     for (let i = 0; i < publicPouch.length; i++) {
@@ -256,23 +258,31 @@ const generatePlayersTile = () => {
                 }
             } 
         }
-        
-        //check if the id exist in the used array, if not then 
-        //check if the id exist in the random array, if not then push into random
-        //when randomId array is 28 in length
-        // deal cards to player and computer
-        //break the loop
     }
+    computerTile = computerTile.sort();
+    playerTile = playerTile.sort();
     console.log('com', computerTile);
     console.log('player', playerTile);
     console.log('randomId', randomId);
 }
 //need solve = the player and computer is just getting the "id" of the tile not the whole object!
 
+const showPlayerTile = (playerTile) => {
+    for (let i = 0; i < playerTile.length; i++) {
+        for (let j = 0; j < publicPouch.length; j++) {
+            if (playerTile[i] === publicPouch[j].id) {
+                $('.player-rack').append(`<div id="p${i}" class="tile" style="background-image: url('../images/${publicPouch[j].color}-0${publicPouch[j].number}.svg');"></div>`)
+            }
+        }
+        
+    }
+    
+}
 const generatePlayground = () =>{
     generateRuns(roots);
     generateGroups(roots);
     generatePlayersTile();
+    showPlayerTile(playerTile);
 };
 generatePlayground();
 filterUsed();
