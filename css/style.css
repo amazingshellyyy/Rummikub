@@ -5,6 +5,7 @@ body {
     font-family: Arial, Helvetica, sans-serif;
     display: flex;
     flex-direction:column;
+    box-sizing:border-box;
 }
 
 .container1 {
@@ -49,9 +50,9 @@ body {
 }
 .computer-rack, .player-rack {
     min-height: 60px;
-    width: 50vw;
-    height: 8vh;
-    background-color: blue;
+    height: 8.5vh;
+    background-color: burlywood;
+    border-radius: 7px;
     display: flex;
     flex-direction: row;
     padding: 10px 15px;
@@ -64,8 +65,9 @@ body {
 .groups {
     height: 70vh;
     width: 30vw;
-    border: 1px solid black;
+    /* border: 1px solid black; */
     margin: 1vh 1.5vw;
+    margin-left: 10vw;
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
@@ -82,7 +84,7 @@ body {
 .runs {
     height: 70vh;
     width: 45vw;
-    border: 1px solid black;
+    /* border: 1px solid black; */
     margin: 1vh 1.5vw;
     display: flex;
     flex-direction: column;
@@ -100,15 +102,16 @@ body {
 }
 
 .tile {
-    border: 1px solid darkgray;
+    /* border: 1px solid darkgray; */
     width: 2.8vw;
     margin-left: 5px;
     background-image: url("../images/tileBack.png");
     background-repeat: no-repeat;
     background-size: cover;
+
 }
 
 .hide{
-    opacity: 0.8;
-    filter: grayscale(60%) brightness(90%);
+    opacity: 0.5;
+    /* filter: grayscale(100%) brightness(90%); */
 }
