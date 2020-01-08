@@ -3,19 +3,19 @@
 /* render the default tile in the playground */
 /* charToIndex */
 const cTI = {
-    '1': "1",
-    '2': "2",
-    '3': "3",
-    '4': "4",
-    '5': "5",
-    '6': "6",
-    '7': "7",
-    '8': "8",
-    '9': "9",
-    'a': "10",
-    'b': "11",
-    'c': "12",
-    'd': "13",
+    '1': 1,
+    '2': 2,
+    '3': 3,
+    '4': 4,
+    '5': 5,
+    '6': 6,
+    '7': 7,
+    '8': 8,
+    '9': 9,
+    'a': 10,
+    'b': 11,
+    'c': 12,
+    'd': 13,
 }
 /* rowToColor */
 const rTC = {
@@ -93,7 +93,7 @@ let runRoots = [];
 let groupRoots = [];
 let roots = [];
 const getRoots = () => {
-    let row = [1,3,5,7];
+    /* let row = [1,3,5,7];
     let column = [2,3,4,5,6,7,8,9,10,11,12];
     for (let i = 0; i < 4; i++) {
         let rowI = Math.floor(Math.random()*row.length); 
@@ -110,24 +110,18 @@ const getRoots = () => {
         roots.push({"set": "group","row": row2[row2I], "column": column2[column2I]});
         row2.splice(row2I ,1); 
         column.splice(column2I ,1);
-    }
-    // let roots = random(6);
-    // for (let i = 0; i < roots.length; i++) {
-    //     if (roots[i][0] % 2 === 1 && cTI[roots[i][1]]>1 && cTI[roots[i][1]]<13 ) {
-    //         runRoots.push(roots[i]);
-    //     } else if (roots[i][0] === 2 || roots[i][0] === 4) {
-    //         groupRoots.push(roots[i]);
-    //     }
-    // }
-    
+    } */
+    let roots = random(10);
     for (let i = 0; i < roots.length; i++) {
-        if (roots[i].set == "run" ) {
-            used.push.apply(used, [`${roots[i].row}${dict[roots[i].column - 1]}`,`${roots[i].row}${dict[roots[i].column]}`,`${roots[i].row}${dict[roots[i].column + 1]}`]);
-        } else {
-            used.push.apply(used, [`2${dict[roots[i].column]}`,`4${dict[roots[i].column]}`,`6${dict[roots[i].column]}`]);
+        if (roots[i][0] % 2 === 1 && cTI[roots[i][1]]>1 && cTI[roots[i][1]]<13 ) {
+            runRoots.push(roots[i]);
+        } else if (roots[i][0] %2 === 0 || roots[i][0] === 2 || roots[i][0] === 4) {
+            groupRoots.push(roots[i]);
         }
     }
-    console.log('used', used);
+    console.log("roots", roots);
+    console.log('runsR', runRoots);
+    console.log('groupR', groupRoots);
 }
 getRoots();
 console.log("roots",roots);
@@ -143,7 +137,7 @@ const filterUsed = () => {
 
 const $groups = $('.groups');
 const $runs = $('.runs');
-const generateRuns = (roots) => {
+const generateRuns = (runRoots) => {
     runBoard.forEach( (string,row) => {
         const run = string.split('');
         $runs.append(`<div id="r${row +1}" class="run"></div>`);
@@ -212,41 +206,33 @@ const generateRuns = (roots) => {
         })
     })
     
-    for (let i = 0; i < 4; i++) {
-        let r = roots[i].row;
-        let c = roots[i].column;
-        $(`#${r}${dict[c- 1]}`).addClass("highlight");
-        $(`#${r}${dict[c]}`).addClass("highlight");
-        $(`#${r}${dict[c+ 1]}`).addClass("highlight");
-        runBoard[r-1] = setCharAt(runBoard[r-1],roots[i].column -2,dict[c - 1]);
-        runBoard[r-1] = setCharAt(runBoard[r-1],roots[i].column -1,dict[c]);
-        runBoard[r-1] = setCharAt(runBoard[r-1],roots[i].column,dict[c + 1]);
-
+    for (let i = 0; i < runRoots.length; i++) {
+        let r = runRoots[i][0];
+        let c = runRoots[i][1];
+        $(`#${r}${dict[cTI[c]- 1]}`).addClass("highlight");
+        $(`#${r}${dict[cTI[c]]}`).addClass("highlight");
+        $(`#${r}${dict[cTI[c]+ 1]}`).addClass("highlight");
+        console.log("ctI",cTI[c]+1);
+        console.log("idc", dict[cTI[c]+ 1]);
+        runBoard[r-1] = setCharAt(runBoard[r-1],runRoots[i].column -2,dict[c - 1]);
+        runBoard[r-1] = setCharAt(runBoard[r-1],runRoots[i].column -1,dict[c]);
+        runBoard[r-1] = setCharAt(runBoard[r-1],runRoots[i].column,dict[c + 1]);
     }
 }
 
 
 
-let groupBorad = []
-const generateGroups = (roots) => {
-    for (let i = 1; i <= 2; i++) {
-        if (roots[i+3].column >= 10) {
+let groupBoard = [];
+const generateGroups = (groupRoots) => {
+    for (let i = 1; i < groupRoots.length; i++) {
             $groups.append(`<div id="g${i}" class="group">
-        <div class="tile highlight" style="background-image:url('../images/1-0${dict[roots[i+3].column]}.svg')"></div>
-        <div class="tile highlight" style="background-image:url('../images/2-0${dict[roots[i+3].column]}.svg')"></div>
-        <div class="tile highlight" style="background-image:url('../images/3-0${dict[roots[i+3].column]}.svg')"></div>
-        <div class="tile"></div>
-    </div>`);
-        } else {
-            $groups.append(`<div id="g${i}" class="group">
-        <div class="tile highlight" style="background-image:url('../images/1-0${roots[i+3].column}.svg')"></div>
-        <div class="tile highlight" style="background-image:url('../images/2-0${roots[i+3].column}.svg')"></div>
-        <div class="tile highlight" style="background-image:url('../images/3-0${roots[i+3].column}.svg')"></div>
+        <div class="tile highlight" style="background-image:url('../images/1-0${groupRoots[i][1]}.svg')"></div>
+        <div class="tile highlight" style="background-image:url('../images/2-0${groupRoots[i][1]}.svg')"></div>
+        <div class="tile highlight" style="background-image:url('../images/3-0${groupRoots[i][1]}.svg')"></div>
         <div class="tile"></div>
     </div>`)
-        }
     }
-    for (let i = 3; i <= 16; i++) {
+    for (let i = 0; i <= 16 - groupRoots.length; i++) {
         $groups.append(`<div id="g${i}" class="group">
         <div class="tile"></div>
         <div class="tile"></div>
@@ -254,7 +240,6 @@ const generateGroups = (roots) => {
         <div class="tile"></div>
     </div>`)
     }
-    
 }
 
 let playerTile = [];
@@ -298,8 +283,8 @@ const showPlayerTile = (playerTile) => {
     
 }
 const generatePlayground = () =>{
-    generateRuns(roots);
-    generateGroups(roots);
+    generateRuns(runRoots);
+    generateGroups(groupRoots);
     generatePlayersTile();
     showPlayerTile(playerTile);
 };
