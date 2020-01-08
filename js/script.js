@@ -103,7 +103,26 @@ const filterUsed = () => {
     return remainPouch;
 }
 
-
+//random function
+const random = (num) => {
+    const randomId = [];
+    for (let i = 0; i < publicPouch.length; i++) {
+        let index = Math.floor(Math.random()*publicPouch.length);
+        let id = publicPouch[index].id;
+        if (used.indexOf(id) == -1) {
+            if (randomId.indexOf(id) == -1) {
+                randomId.push(id);
+                if (randomId.length === num) {
+                    for (let i = 0; i < randomId.length; i++) {
+                        used.push(randomId[i]);
+                    }
+                    break;
+                }
+            } 
+        }
+    }
+    return randomId;
+}
 
 const $groups = $('.groups');
 const $runs = $('.runs');
@@ -214,42 +233,30 @@ const generateGroups = (roots) => {
 
 let playerTile = [];
 let computerTile = [];
-let randomId = [];
+
 const generatePlayersTile = () => {
-    for (let i = 0; i < publicPouch.length; i++) {
-        let index = Math.floor(Math.random()*publicPouch.length);
-        let id = publicPouch[index].id;
-        if (used.indexOf(id) == -1) {
-            if (randomId.indexOf(id) == -1) {
-                randomId.push(id);
-                if (randomId.length === 28) {
-                    for (let i = 0; i < randomId.length; i++) {
-                        if (i%2 === 0) {
-                            computerTile.push(randomId[i]);
-                            used.push(randomId[i]);
-                        } else {
-                            playerTile.push(randomId[i]);
-                            used.push(randomId[i]);
-                        } 
-                    }
-                    break;
-                }
-            } 
-        }
+    let arr = random(28);
+    console.log("arr",arr);
+    for (let i = 0; i < arr.length; i++) {
+        if (i%2 === 0) {
+            computerTile.push(arr[i]);
+        } else {
+            playerTile.push(arr[i]);
+        } 
     }
     computerTile = computerTile.sort();
     playerTile = playerTile.sort();
     console.log('com', computerTile);
     console.log('player', playerTile);
-    console.log('randomId', randomId);
 }
-//need solve = the player and computer is just getting the "id" of the tile not the whole object!
 
+//need solve = the player and computer is just getting the "id" of the tile not the whole object!
+const $playerRack = $('.player-rack');
 const showPlayerTile = (playerTile) => {
     for (let i = 0; i < playerTile.length; i++) {
         for (let j = 0; j < publicPouch.length; j++) {
             if (playerTile[i] === publicPouch[j].id) {
-                $('.player-rack').append(`<div id="p${i}" class="tile highlight" style="background-image: url('../images/${publicPouch[j].color}-0${publicPouch[j].number}.svg');"></div>`)
+                $playerRack.append(`<div id="p${i}" class="tile highlight" style="background-image: url('../images/${publicPouch[j].color}-0${publicPouch[j].number}.svg');"></div>`)
             }
         }
         
@@ -269,4 +276,30 @@ filterUsed();
 console.log("publicPouch", publicPouch)
 console.log("used",used.sort());
 console.log("remainPouch", remainPouch);
+
+
+/* Draw Card */
+const $drawbtn = $('#draw');
+const drawCard = () => {
+    
+    let id = random(1)[0];
+    playerTile.push(id);
+    console.log(playerTile);
+    renderDraw(id);
+}
+$drawbtn.on('click', function(){
+    drawCard();});
+
+const renderDraw = (id) => {
+        publicPouch.forEach(item => {
+            if(item.id === id){
+                let color = rTC[id.slice(0,1)];
+                console.log(color);//get string ID of the tile
+                let num = id.slice(1,2);
+                console.log(num);//get string ID of the tile
+                let preid = parseInt($('.player-rack div:last-child').attr("id").slice(1,3));
+                $playerRack.append(`<div id="p${preid + 1}" class="tile highlight" style="background-image: url('../images/${color}-0${num}.svg');"></div>`)
+            }
+        })
+}
 
