@@ -95,7 +95,6 @@ const getRoots = () => {
 }
 getRoots();
 console.log("roots",roots);
-console.log(publicPouch);
 const filterUsed = () => {
     remainPouch = publicPouch.filter(function(item){
         return used.indexOf(item.id) == -1;
@@ -126,80 +125,60 @@ const generateRuns = (roots) => {
                 }
                 if (row + 1 == 1 || row + 1 == 2) {
                     if (column + 1 == 10) {
-                        $(`#${row + 1}a`).css("background-image", `url("../images/1-0a.svg")`)
-                        $(`#${row + 1}a`).addClass("hide");
+                        $(`#${row + 1}a`).css("background-image", `url("../images/1-0a.svg")`);
                     } else if (column + 1 == 11) {
-                        $(`#${row + 1}b`).css("background-image", `url("../images/1-0b.svg")`)
-                        $(`#${row + 1}b`).addClass("hide");
+                        $(`#${row + 1}b`).css("background-image", `url("../images/1-0b.svg")`);
                     } else if (column + 1 == 12) {
-                        $(`#${row + 1}c`).css("background-image", `url("../images/1-0c.svg")`)
-                        $(`#${row + 1}c`).addClass("hide");
+                        $(`#${row + 1}c`).css("background-image", `url("../images/1-0c.svg")`);
                     } else if (column + 1 == 13) {
-                        $(`#${row + 1}d`).css("background-image", `url("../images/1-0d.svg")`)
-                        $(`#${row + 1}d`).addClass("hide");
+                        $(`#${row + 1}d`).css("background-image", `url("../images/1-0d.svg")`);
                     } else {
-                    $(`#${row + 1}${column + 1}`).css("background-image", `url("../images/1-0${column + 1}.svg")`)
-                    $(`#${row + 1}${column + 1}`).addClass("hide");
+                    $(`#${row + 1}${column + 1}`).css("background-image", `url("../images/1-0${column + 1}.svg")`);
                     }
                 } else if (row + 1 == 3 || row + 1 == 4) {
                     if (column + 1 == 10) {
-                        $(`#${row + 1}a`).css("background-image", `url("../images/2-0a.svg")`)
-                        $(`#${row + 1}a`).addClass("hide");
+                        $(`#${row + 1}a`).css("background-image", `url("../images/2-0a.svg")`);
                     } else if (column + 1 == 11) {
-                        $(`#${row + 1}b`).css("background-image", `url("../images/2-0b.svg")`)
-                        $(`#${row + 1}b`).addClass("hide");
+                        $(`#${row + 1}b`).css("background-image", `url("../images/2-0b.svg")`);
                     } else if (column + 1 == 12) {
-                        $(`#${row + 1}c`).css("background-image", `url("../images/2-0c.svg")`)
-                        $(`#${row + 1}c`).addClass("hide");
+                        $(`#${row + 1}c`).css("background-image", `url("../images/2-0c.svg")`);
                     } else if (column + 1 == 13) {
-                        $(`#${row + 1}d`).css("background-image", `url("../images/2-0d.svg")`)
-                        $(`#${row + 1}d`).addClass("hide");
+                        $(`#${row + 1}d`).css("background-image", `url("../images/2-0d.svg")`);
                     } else {
-                    $(`#${row + 1}${column + 1}`).css("background-image", `url("../images/2-0${column + 1}.svg")`)
-                    $(`#${row + 1}${column + 1}`).addClass("hide");
+                    $(`#${row + 1}${column + 1}`).css("background-image", `url("../images/2-0${column + 1}.svg")`);
                     }
                 } else if (row + 1 == 5 || row + 1 == 6) {
                     if (column + 1 == 10) {
-                        $(`#${row + 1}a`).css("background-image", `url("../images/3-0a.svg")`)
-                        $(`#${row + 1}a`).addClass("hide");
+                        $(`#${row + 1}a`).css("background-image", `url("../images/3-0a.svg")`);
                     } else if (column + 1 == 11) {
-                        $(`#${row + 1}b`).css("background-image", `url("../images/3-0b.svg")`)
-                        $(`#${row + 1}b`).addClass("hide");
+                        $(`#${row + 1}b`).css("background-image", `url("../images/3-0b.svg")`);
                     } else if (column + 1 == 12) {
-                        $(`#${row + 1}c`).css("background-image", `url("../images/3-0c.svg")`)
-                        $(`#${row + 1}c`).addClass("hide");
+                        $(`#${row + 1}c`).css("background-image", `url("../images/3-0c.svg")`);
                     } else if (column + 1 == 13) {
-                        $(`#${row + 1}d`).css("background-image", `url("../images/3-0d.svg")`)
-                        $(`#${row + 1}d`).addClass("hide");
+                        $(`#${row + 1}d`).css("background-image", `url("../images/3-0d.svg")`);
                     } else {
-                    $(`#${row + 1}${column + 1}`).css("background-image", `url("../images/3-0${column + 1}.svg")`)
-                    $(`#${row + 1}${column + 1}`).addClass("hide");
+                    $(`#${row + 1}${column + 1}`).css("background-image", `url("../images/3-0${column + 1}.svg")`);
                     }
                 } else {
                     if (column + 1 == 10) {
-                        $(`#${row + 1}a`).css("background-image", `url("../images/4-0a.svg")`)
-                        $(`#${row + 1}a`).addClass("hide");
+                        $(`#${row + 1}a`).css("background-image", `url("../images/4-0a.svg")`);
                     } else if (column + 1 == 11) {
-                        $(`#${row + 1}b`).css("background-image", `url("../images/4-0b.svg")`)
-                        $(`#${row + 1}b`).addClass("hide");
+                        $(`#${row + 1}b`).css("background-image", `url("../images/4-0b.svg")`);
                     } else if (column + 1 == 12) {
-                        $(`#${row + 1}c`).css("background-image", `url("../images/4-0c.svg")`)
-                        $(`#${row + 1}c`).addClass("hide");
+                        $(`#${row + 1}c`).css("background-image", `url("../images/4-0c.svg")`);
                     } else if (column + 1 == 13) {
-                        $(`#${row + 1}d`).css("background-image", `url("../images/4-0d.svg")`)
-                        $(`#${row + 1}d`).addClass("hide");
+                        $(`#${row + 1}d`).css("background-image", `url("../images/4-0d.svg")`);
                     } else {
-                    $(`#${row + 1}${column + 1}`).css("background-image", `url("../images/4-0${column + 1}.svg")`)
-                    $(`#${row + 1}${column + 1}`).addClass("hide");
+                    $(`#${row + 1}${column + 1}`).css("background-image", `url("../images/4-0${column + 1}.svg")`);
                     }
                 }
             
         })
     })
     for (let i = 0; i < 4; i++) {
-        $(`#${roots[i].row}${dict[roots[i].column - 1]}`).removeClass("hide");
-        $(`#${roots[i].row}${dict[roots[i].column]}`).removeClass("hide");
-        $(`#${roots[i].row}${dict[roots[i].column + 1]}`).removeClass("hide");
+        $(`#${roots[i].row}${dict[roots[i].column - 1]}`).addClass("highlight")
+        $(`#${roots[i].row}${dict[roots[i].column]}`).addClass("highlight")
+        $(`#${roots[i].row}${dict[roots[i].column + 1]}`).addClass("highlight")
     }
     console.log("runBoard", runBoard);
 }
@@ -208,16 +187,16 @@ const generateGroups = (roots) => {
     for (let i = 1; i <= 2; i++) {
         if (roots[i+3].column >= 10) {
             $groups.append(`<div id="g${i}" class="group">
-        <div class="tile" style="background-image:url('../images/1-0${dict[roots[i+3].column]}.svg')"></div>
-        <div class="tile" style="background-image:url('../images/2-0${dict[roots[i+3].column]}.svg')"></div>
-        <div class="tile" style="background-image:url('../images/3-0${dict[roots[i+3].column]}.svg')"></div>
+        <div class="tile highlight" style="background-image:url('../images/1-0${dict[roots[i+3].column]}.svg')"></div>
+        <div class="tile highlight" style="background-image:url('../images/2-0${dict[roots[i+3].column]}.svg')"></div>
+        <div class="tile highlight" style="background-image:url('../images/3-0${dict[roots[i+3].column]}.svg')"></div>
         <div class="tile"></div>
     </div>`);
         } else {
             $groups.append(`<div id="g${i}" class="group">
-        <div class="tile" style="background-image:url('../images/1-0${roots[i+3].column}.svg')"></div>
-        <div class="tile" style="background-image:url('../images/2-0${roots[i+3].column}.svg')"></div>
-        <div class="tile" style="background-image:url('../images/3-0${roots[i+3].column}.svg')"></div>
+        <div class="tile highlight" style="background-image:url('../images/1-0${roots[i+3].column}.svg')"></div>
+        <div class="tile highlight" style="background-image:url('../images/2-0${roots[i+3].column}.svg')"></div>
+        <div class="tile highlight" style="background-image:url('../images/3-0${roots[i+3].column}.svg')"></div>
         <div class="tile"></div>
     </div>`)
         }
@@ -245,7 +224,6 @@ const generatePlayersTile = () => {
                 randomId.push(id);
                 if (randomId.length === 28) {
                     for (let i = 0; i < randomId.length; i++) {
-                        console.log(i);
                         if (i%2 === 0) {
                             computerTile.push(randomId[i]);
                             used.push(randomId[i]);
@@ -271,7 +249,7 @@ const showPlayerTile = (playerTile) => {
     for (let i = 0; i < playerTile.length; i++) {
         for (let j = 0; j < publicPouch.length; j++) {
             if (playerTile[i] === publicPouch[j].id) {
-                $('.player-rack').append(`<div id="p${i}" class="tile" style="background-image: url('../images/${publicPouch[j].color}-0${publicPouch[j].number}.svg');"></div>`)
+                $('.player-rack').append(`<div id="p${i}" class="tile highlight" style="background-image: url('../images/${publicPouch[j].color}-0${publicPouch[j].number}.svg');"></div>`)
             }
         }
         
@@ -286,6 +264,8 @@ const generatePlayground = () =>{
 };
 generatePlayground();
 filterUsed();
+
+
 console.log("publicPouch", publicPouch)
 console.log("used",used.sort());
 console.log("remainPouch", remainPouch);
