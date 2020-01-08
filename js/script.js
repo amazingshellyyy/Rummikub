@@ -19,14 +19,14 @@ const cTI = {
 }
 /* rowToColor */
 const rTC = {
-    "1": "1",
-    "2": "1",
-    "3": "2",
-    "4": "2",
-    "5": "3",
-    "6": "3",
-    "7": "4",
-    "8": "4"
+    "1": 1,
+    "2": 1,
+    "3": 2,
+    "4": 2,
+    "5": 3,
+    "6": 3,
+    "7": 4,
+    "8": 4,
 }
 function setCharAt(str,index,chr) {
     if(index > str.length-1) return str;
@@ -77,7 +77,7 @@ const buildPouch = () => {
             publicPouch.push({
                 "id": `${i}${dict[j]}`,
                 "tile": `<div id="${i}${dict[j]}" class="tile" style="background-image:url('../images/${rTC[i]}-0${dict[j]}.svg')"></div>`,
-                "color": `${rTC[i]}`,
+                "color": rTC[i],
                 "number": `${dict[j]}`,
             });
         }
@@ -86,45 +86,26 @@ const buildPouch = () => {
 buildPouch();
 const used = [];
 
-
-let runBoard = ['@@@@@@@@@@@@@','@@@@@@@@@@@@@','@@@@@@@@@@@@@','@@@@@@@@@@@@@','@@@@@@@@@@@@@','@@@@@@@@@@@@@','@@@@@@@@@@@@@','@@@@@@@@@@@@@'];
-
 let runRoots = [];
 let groupRoots = [];
-let roots = [];
 const getRoots = () => {
-    /* let row = [1,3,5,7];
-    let column = [2,3,4,5,6,7,8,9,10,11,12];
-    for (let i = 0; i < 4; i++) {
-        let rowI = Math.floor(Math.random()*row.length); 
-        let columnI = Math.floor(Math.random()*column.length);
-        roots.push({"set": "run","row": row[rowI], "column": column[columnI]});
-        row.splice(rowI ,1); 
-        column.splice(columnI - 1 ,3);
-    }
-    let row2 = [2,4];
-    let column2 = [1,2,3,4,5,6,7,8,9,10,11,12,13];
-    for (let i = 0; i < 2; i++) {
-        let row2I = Math.floor(Math.random()*row2.length); 
-        let column2I = Math.floor(Math.random()*column2.length);
-        roots.push({"set": "group","row": row2[row2I], "column": column2[column2I]});
-        row2.splice(row2I ,1); 
-        column.splice(column2I ,1);
-    } */
-    let roots = random(10);
+    let roots = random(8);
     for (let i = 0; i < roots.length; i++) {
         if (roots[i][0] % 2 === 1 && cTI[roots[i][1]]>1 && cTI[roots[i][1]]<13 ) {
             runRoots.push(roots[i]);
-        } else if (roots[i][0] %2 === 0 || roots[i][0] === 2 || roots[i][0] === 4) {
+        } else if (roots[i][0] === "4" || roots[i][0] === "6") {
             groupRoots.push(roots[i]);
+            groupRoots.sort();
         }
+        for (let j = 1; j < groupRoots.length; j++) {
+            if (groupRoots[j][1] === groupRoots[j-1][1]) {
+                groupRoots.splice(j-1,1);
+            }
+        }
+        
     }
-    console.log("roots", roots);
-    console.log('runsR', runRoots);
-    console.log('groupR', groupRoots);
 }
 getRoots();
-console.log("roots",roots);
 const filterUsed = () => {
     remainPouch = publicPouch.filter(function(item){
         return used.indexOf(item.id) == -1;
@@ -132,113 +113,79 @@ const filterUsed = () => {
     })
     return remainPouch;
 }
-
-
-
+const filter = (item, arr) => {
+        return arr.indexOf(item) == -1;  // it doesn't exists in the used array === it hasn't been used
+    }
 const $groups = $('.groups');
 const $runs = $('.runs');
+
+let runBoard = [];
 const generateRuns = (runRoots) => {
-    runBoard.forEach( (string,row) => {
-        const run = string.split('');
-        $runs.append(`<div id="r${row +1}" class="run"></div>`);
-        run.forEach( (tile,column) =>{
-                if (column + 1 == 10) {
-                    $(`#r${row + 1}`).append(`<div id="${row + 1}a" class="tile" ></div>`); 
-                } else if (column + 1 == 11) {
-                    $(`#r${row + 1}`).append(`<div id="${row + 1}b" class="tile" ></div>`);
-                } else if (column + 1 == 12) {
-                    $(`#r${row + 1}`).append(`<div id="${row + 1}c" class="tile" ></div>`);
-                } else if (column + 1 == 13) {
-                    $(`#r${row + 1}`).append(`<div id="${row + 1}d" class="tile" ></div>`);
-                } else {
-                    $(`#r${row +1}`).append(`<div id="${row + 1}${column +1}" class="tile" ></div>`);
+    for (let i = 0; i < 8; i++) {
+        runBoard.push('@@@@@@@@@@@@@');
+    }
+    for (let i = 0; i < runBoard.length; i++) {
+        for (let j = 0; j < runRoots.length; j++) {
+            runBoard[cTI[runRoots[j][0]]-1] = setCharAt(runBoard[cTI[runRoots[j][0]]-1],cTI[runRoots[j][1]]-2,dict[cTI[runRoots[j][1] ]-1]);
+            runBoard[cTI[runRoots[j][0]]-1] = setCharAt(runBoard[cTI[runRoots[j][0]]-1],cTI[runRoots[j][1]]-1,dict[cTI[runRoots[j][1]]]);
+            runBoard[cTI[runRoots[j][0]]-1] = setCharAt(runBoard[cTI[runRoots[j][0]]-1],cTI[runRoots[j][1]],dict[cTI[runRoots[j][1]]+1]);
+        }
+    }
+    renderRunBoard(runBoard);
+}
+
+const renderRunBoard = (runBoard) => {
+    for (let i = 0; i < runBoard.length; i++) {
+        $runs.append(`<div id="r${i+1}" class="run"></div>`);
+        for (let j = 0; j < runBoard[i].length; j++) {
+            publicPouch.forEach(item => {
+                if ( `${i+1}` === item.id[0] && dict[j+1] === item.number) {
+                    $(`#r${i+1}`).append(`<div class="tile" style="background-image:url('../images/${rTC[i+1]}-0${dict[j+1]}.svg')"></div>`);
                 }
-                if (row + 1 == 1 || row + 1 == 2) {
-                    if (column + 1 == 10) {
-                        $(`#${row + 1}a`).css("background-image", `url("../images/1-0a.svg")`);
-                    } else if (column + 1 == 11) {
-                        $(`#${row + 1}b`).css("background-image", `url("../images/1-0b.svg")`);
-                    } else if (column + 1 == 12) {
-                        $(`#${row + 1}c`).css("background-image", `url("../images/1-0c.svg")`);
-                    } else if (column + 1 == 13) {
-                        $(`#${row + 1}d`).css("background-image", `url("../images/1-0d.svg")`);
-                    } else {
-                    $(`#${row + 1}${column + 1}`).css("background-image", `url("../images/1-0${column + 1}.svg")`);
-                    }
-                } else if (row + 1 == 3 || row + 1 == 4) {
-                    if (column + 1 == 10) {
-                        $(`#${row + 1}a`).css("background-image", `url("../images/2-0a.svg")`);
-                    } else if (column + 1 == 11) {
-                        $(`#${row + 1}b`).css("background-image", `url("../images/2-0b.svg")`);
-                    } else if (column + 1 == 12) {
-                        $(`#${row + 1}c`).css("background-image", `url("../images/2-0c.svg")`);
-                    } else if (column + 1 == 13) {
-                        $(`#${row + 1}d`).css("background-image", `url("../images/2-0d.svg")`);
-                    } else {
-                    $(`#${row + 1}${column + 1}`).css("background-image", `url("../images/2-0${column + 1}.svg")`);
-                    }
-                } else if (row + 1 == 5 || row + 1 == 6) {
-                    if (column + 1 == 10) {
-                        $(`#${row + 1}a`).css("background-image", `url("../images/3-0a.svg")`);
-                    } else if (column + 1 == 11) {
-                        $(`#${row + 1}b`).css("background-image", `url("../images/3-0b.svg")`);
-                    } else if (column + 1 == 12) {
-                        $(`#${row + 1}c`).css("background-image", `url("../images/3-0c.svg")`);
-                    } else if (column + 1 == 13) {
-                        $(`#${row + 1}d`).css("background-image", `url("../images/3-0d.svg")`);
-                    } else {
-                    $(`#${row + 1}${column + 1}`).css("background-image", `url("../images/3-0${column + 1}.svg")`);
-                    }
-                } else {
-                    if (column + 1 == 10) {
-                        $(`#${row + 1}a`).css("background-image", `url("../images/4-0a.svg")`);
-                    } else if (column + 1 == 11) {
-                        $(`#${row + 1}b`).css("background-image", `url("../images/4-0b.svg")`);
-                    } else if (column + 1 == 12) {
-                        $(`#${row + 1}c`).css("background-image", `url("../images/4-0c.svg")`);
-                    } else if (column + 1 == 13) {
-                        $(`#${row + 1}d`).css("background-image", `url("../images/4-0d.svg")`);
-                    } else {
-                    $(`#${row + 1}${column + 1}`).css("background-image", `url("../images/4-0${column + 1}.svg")`);
-                    }
-                }
-            
-        })
-    })
-    
-    for (let i = 0; i < runRoots.length; i++) {
-        let r = runRoots[i][0];
-        let c = runRoots[i][1];
-        $(`#${r}${dict[cTI[c]- 1]}`).addClass("highlight");
-        $(`#${r}${dict[cTI[c]]}`).addClass("highlight");
-        $(`#${r}${dict[cTI[c]+ 1]}`).addClass("highlight");
-        console.log("ctI",cTI[c]+1);
-        console.log("idc", dict[cTI[c]+ 1]);
-        runBoard[r-1] = setCharAt(runBoard[r-1],runRoots[i].column -2,dict[c - 1]);
-        runBoard[r-1] = setCharAt(runBoard[r-1],runRoots[i].column -1,dict[c]);
-        runBoard[r-1] = setCharAt(runBoard[r-1],runRoots[i].column,dict[c + 1]);
+            })
+            if (runBoard[i][j] !== "@") {
+                $(`#r${i+1} > div`).eq(j).addClass("highlight");
+            }
+        }
     }
 }
 
 
-
 let groupBoard = [];
 const generateGroups = (groupRoots) => {
-    for (let i = 1; i < groupRoots.length; i++) {
-            $groups.append(`<div id="g${i}" class="group">
-        <div class="tile highlight" style="background-image:url('../images/1-0${groupRoots[i][1]}.svg')"></div>
-        <div class="tile highlight" style="background-image:url('../images/2-0${groupRoots[i][1]}.svg')"></div>
-        <div class="tile highlight" style="background-image:url('../images/3-0${groupRoots[i][1]}.svg')"></div>
-        <div class="tile"></div>
-    </div>`)
+    for (let i = 0; i < groupRoots.length; i++) {
+        let g = [];
+        publicPouch.forEach(item => {
+            if (item.id === groupRoots[i] || item.id === (parseInt(groupRoots[i][0])-2)+groupRoots[i][1] || item.id === (parseInt(groupRoots[i][0])+2)+groupRoots[i][1]) {
+                g.push(item);
+            }
+        })
+        groupBoard.push(g);
     }
-    for (let i = 0; i <= 16 - groupRoots.length; i++) {
-        $groups.append(`<div id="g${i}" class="group">
-        <div class="tile"></div>
-        <div class="tile"></div>
-        <div class="tile"></div>
-        <div class="tile"></div>
-    </div>`)
+    for (let i = 0; i < 16 - groupRoots.length; i++) {
+        groupBoard.push([]);
+    }
+    for (let i = 0; i < groupBoard.length; i++) {
+        for (let j = 0; j < groupBoard.length; j++) {
+            if (groupBoard[i].length < 4) {
+                groupBoard[i].push("@");
+            }
+        }
+    }
+    renderGroupBoard(groupBoard);
+    return groupBoard;
+}
+
+const renderGroupBoard = (groupBoard) => {
+    for (let i = 0; i < groupBoard.length; i++) {
+        $groups.append(`<div id="g${i}" class="group"></div>`);
+        for (let j = 0; j < 4; j++) {
+            $(`#g${i}`).append(`<div class="tile"></div>`)
+            if (groupBoard[i][j] !== "@") {
+                $(`#g${i} > div`).eq(j).replaceWith(groupBoard[i][j].tile);
+                $(`#g${i} > div`).addClass("highlight");
+            }
+        }
     }
 }
 
@@ -254,11 +201,9 @@ const sortRack = (rack) => {
         }
         return 0;
       });
-    console.log('rack',rack);
 }
 const generatePlayersTile = () => {
     let arr = random(28);
-    console.log("arr",arr);
     for (let i = 0; i < arr.length; i++) {
         if (i%2 === 0) {
             computerTile.push(arr[i]);
@@ -291,11 +236,13 @@ const generatePlayground = () =>{
 generatePlayground();
 filterUsed();
 
-
+console.log('runsR', runRoots);
+console.log('groupR', groupRoots);
 console.log("publicPouch", publicPouch)
 console.log("used",used.sort());
 console.log("remainPouch", remainPouch);
 console.log("runboard", runBoard);
+console.log('groupBoard',groupBoard);
 
 
 /* Draw Card */
@@ -318,9 +265,7 @@ const renderDraw = (id) => {
         publicPouch.forEach(item => {
             if(item.id === id){
                 let color = rTC[id.slice(0,1)];
-                console.log(color);//get string ID of the tile
                 let num = id.slice(1,2);
-                console.log(num);//get string ID of the tile
                 let preid = parseInt($('.player-rack div:last-child').attr("id").slice(1,3));
                 $playerRack.append(`<div id="p${preid + 1}" class="tile highlight" style="background-image: url('../images/${color}-0${num}.svg');"></div>`)
             }
