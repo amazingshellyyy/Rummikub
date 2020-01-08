@@ -41,11 +41,11 @@ body {
     margin: 0;
 }
 
-.computer-info div, .player-info div {
+.computer-info div, .player-info div, .pouch div {
     text-align: center;
     margin-top: 3px;
 }
-.computer-info img, .player-info img {
+.computer-info img, .player-info img, .pouch img {
     height: 25px;
 }
 .computer-rack, .player-rack {
@@ -98,6 +98,9 @@ body {
 }
 .draw {
     height: 10vh;
+    
+}
+.pouch {
     align-self: flex-end;
 }
 

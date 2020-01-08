@@ -281,11 +281,11 @@ console.log("remainPouch", remainPouch);
 /* Draw Card */
 const $drawbtn = $('#draw');
 const drawCard = () => {
-    
     let id = random(1)[0];
     playerTile.push(id);
-    console.log(playerTile);
     renderDraw(id);
+    filterUsed();
+    updateTileCount();
 }
 $drawbtn.on('click', function(){
     drawCard();});
@@ -302,4 +302,11 @@ const renderDraw = (id) => {
             }
         })
 }
+
+const updateTileCount = () => {
+    $('#p-tile-count').text(`x${playerTile.length}`);
+    $('#c-tile-count').text(`x${computerTile.length}`);
+    $('#public-pouch').text(`x${remainPouch.length}`);
+}
+
 
