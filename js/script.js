@@ -233,7 +233,18 @@ const generateGroups = (roots) => {
 
 let playerTile = [];
 let computerTile = [];
-
+const sortRack = (rack) => {
+    rack.sort(function(x, y) {
+        if (x < y) {
+          return -1;
+        }
+        if (x > y) {
+          return 1;
+        }
+        return 0;
+      });
+    console.log('rack',rack);
+}
 const generatePlayersTile = () => {
     let arr = random(28);
     console.log("arr",arr);
@@ -244,10 +255,7 @@ const generatePlayersTile = () => {
             playerTile.push(arr[i]);
         } 
     }
-    computerTile = computerTile.sort();
-    playerTile = playerTile.sort();
-    console.log('com', computerTile);
-    console.log('player', playerTile);
+    sortRack(playerTile);
 }
 
 //need solve = the player and computer is just getting the "id" of the tile not the whole object!
@@ -283,12 +291,14 @@ const $drawbtn = $('#draw');
 const drawCard = () => {
     let id = random(1)[0];
     playerTile.push(id);
+    playerTile.sort();
     renderDraw(id);
     filterUsed();
     updateTileCount();
 }
 $drawbtn.on('click', function(){
-    drawCard();});
+    drawCard();
+    sortRack(playerTile);});
 
 const renderDraw = (id) => {
         publicPouch.forEach(item => {
@@ -301,6 +311,7 @@ const renderDraw = (id) => {
                 $playerRack.append(`<div id="p${preid + 1}" class="tile highlight" style="background-image: url('../images/${color}-0${num}.svg');"></div>`)
             }
         })
+        
 }
 
 const updateTileCount = () => {
