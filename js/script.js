@@ -28,7 +28,10 @@ const rTC = {
     "7": "4",
     "8": "4"
 }
-
+function setCharAt(str,index,chr) {
+    if(index > str.length-1) return str;
+    return str.substr(0,index) + chr + str.substr(index+1);
+}
 const dict = {
     "1": '1',
     "2": '2',
@@ -43,64 +46,6 @@ const dict = {
     "11": 'b',
     "12": 'c',
     "13": 'd'
-}
-const publicPouch = [];
-let remainPouch = [];
-const buildPouch = () => {
-    for (let i = 1; i <= 8; i++) {
-        for (let j = 1; j <= 13; j++) {
-            publicPouch.push({
-                "id": `${i}${dict[j]}`,
-                "tile": `<div id="${i}${dict[j]}" class="tile" style="background-image:url('../images/${rTC[i]}-0${dict[j]}.svg')"></div>`,
-                "color": `${rTC[i]}`,
-                "number": `${dict[j]}`,
-            });
-        }
-    }
-}
-buildPouch();
-const used = [];
-
-
-const runBoard = ['@@@@@@@@@@@@@','@@@@@@@@@@@@@','@@@@@@@@@@@@@','@@@@@@@@@@@@@','@@@@@@@@@@@@@','@@@@@@@@@@@@@','@@@@@@@@@@@@@','@@@@@@@@@@@@@'];
-
-const roots = [];
-const getRoots = () => {
-    let row = [1,3,5,7];
-    let column = [2,3,4,5,6,7,8,9,10,11,12];
-    for (let i = 0; i < 4; i++) {
-        let rowI = Math.floor(Math.random()*row.length); 
-        let columnI = Math.floor(Math.random()*column.length);
-        roots.push({"set": "run","row": row[rowI], "column": column[columnI]});
-        row.splice(rowI ,1); 
-        column.splice(columnI - 1 ,3);
-    }
-    let row2 = [2,4];
-    let column2 = [1,2,3,4,5,6,7,8,9,10,11,12,13];
-    for (let i = 0; i < 2; i++) {
-        let row2I = Math.floor(Math.random()*row2.length); 
-        let column2I = Math.floor(Math.random()*column2.length);
-        roots.push({"set": "group","row": row2[row2I], "column": column2[column2I]});
-        row2.splice(row2I ,1); 
-        column.splice(column2I ,1);
-    }
-    for (let i = 0; i < roots.length; i++) {
-        if (roots[i].set == "run" ) {
-            used.push.apply(used, [`${roots[i].row}${dict[roots[i].column - 1]}`,`${roots[i].row}${dict[roots[i].column]}`,`${roots[i].row}${dict[roots[i].column + 1]}`]);
-        } else {
-            used.push.apply(used, [`2${dict[roots[i].column]}`,`4${dict[roots[i].column]}`,`6${dict[roots[i].column]}`]);
-        }
-    }
-    
-}
-getRoots();
-console.log("roots",roots);
-const filterUsed = () => {
-    remainPouch = publicPouch.filter(function(item){
-        return used.indexOf(item.id) == -1;
-        // it doesn't exists in the used array === it hasn't been used
-    })
-    return remainPouch;
 }
 
 //random function
@@ -123,6 +68,78 @@ const random = (num) => {
     }
     return randomId;
 }
+
+const publicPouch = [];
+let remainPouch = [];
+const buildPouch = () => {
+    for (let i = 1; i <= 8; i++) {
+        for (let j = 1; j <= 13; j++) {
+            publicPouch.push({
+                "id": `${i}${dict[j]}`,
+                "tile": `<div id="${i}${dict[j]}" class="tile" style="background-image:url('../images/${rTC[i]}-0${dict[j]}.svg')"></div>`,
+                "color": `${rTC[i]}`,
+                "number": `${dict[j]}`,
+            });
+        }
+    }
+}
+buildPouch();
+const used = [];
+
+
+let runBoard = ['@@@@@@@@@@@@@','@@@@@@@@@@@@@','@@@@@@@@@@@@@','@@@@@@@@@@@@@','@@@@@@@@@@@@@','@@@@@@@@@@@@@','@@@@@@@@@@@@@','@@@@@@@@@@@@@'];
+
+let runRoots = [];
+let groupRoots = [];
+let roots = [];
+const getRoots = () => {
+    let row = [1,3,5,7];
+    let column = [2,3,4,5,6,7,8,9,10,11,12];
+    for (let i = 0; i < 4; i++) {
+        let rowI = Math.floor(Math.random()*row.length); 
+        let columnI = Math.floor(Math.random()*column.length);
+        roots.push({"set": "run","row": row[rowI], "column": column[columnI]});
+        row.splice(rowI ,1); 
+        column.splice(columnI - 1 ,3);
+    }
+    let row2 = [2,4];
+    let column2 = [1,2,3,4,5,6,7,8,9,10,11,12,13];
+    for (let i = 0; i < 2; i++) {
+        let row2I = Math.floor(Math.random()*row2.length); 
+        let column2I = Math.floor(Math.random()*column2.length);
+        roots.push({"set": "group","row": row2[row2I], "column": column2[column2I]});
+        row2.splice(row2I ,1); 
+        column.splice(column2I ,1);
+    }
+    // let roots = random(6);
+    // for (let i = 0; i < roots.length; i++) {
+    //     if (roots[i][0] % 2 === 1 && cTI[roots[i][1]]>1 && cTI[roots[i][1]]<13 ) {
+    //         runRoots.push(roots[i]);
+    //     } else if (roots[i][0] === 2 || roots[i][0] === 4) {
+    //         groupRoots.push(roots[i]);
+    //     }
+    // }
+    
+    for (let i = 0; i < roots.length; i++) {
+        if (roots[i].set == "run" ) {
+            used.push.apply(used, [`${roots[i].row}${dict[roots[i].column - 1]}`,`${roots[i].row}${dict[roots[i].column]}`,`${roots[i].row}${dict[roots[i].column + 1]}`]);
+        } else {
+            used.push.apply(used, [`2${dict[roots[i].column]}`,`4${dict[roots[i].column]}`,`6${dict[roots[i].column]}`]);
+        }
+    }
+    console.log('used', used);
+}
+getRoots();
+console.log("roots",roots);
+const filterUsed = () => {
+    remainPouch = publicPouch.filter(function(item){
+        return used.indexOf(item.id) == -1;
+        // it doesn't exists in the used array === it hasn't been used
+    })
+    return remainPouch;
+}
+
+
 
 const $groups = $('.groups');
 const $runs = $('.runs');
@@ -194,14 +211,23 @@ const generateRuns = (roots) => {
             
         })
     })
+    
     for (let i = 0; i < 4; i++) {
-        $(`#${roots[i].row}${dict[roots[i].column - 1]}`).addClass("highlight")
-        $(`#${roots[i].row}${dict[roots[i].column]}`).addClass("highlight")
-        $(`#${roots[i].row}${dict[roots[i].column + 1]}`).addClass("highlight")
+        let r = roots[i].row;
+        let c = roots[i].column;
+        $(`#${r}${dict[c- 1]}`).addClass("highlight");
+        $(`#${r}${dict[c]}`).addClass("highlight");
+        $(`#${r}${dict[c+ 1]}`).addClass("highlight");
+        runBoard[r-1] = setCharAt(runBoard[r-1],roots[i].column -2,dict[c - 1]);
+        runBoard[r-1] = setCharAt(runBoard[r-1],roots[i].column -1,dict[c]);
+        runBoard[r-1] = setCharAt(runBoard[r-1],roots[i].column,dict[c + 1]);
+
     }
-    console.log("runBoard", runBoard);
 }
 
+
+
+let groupBorad = []
 const generateGroups = (roots) => {
     for (let i = 1; i <= 2; i++) {
         if (roots[i+3].column >= 10) {
@@ -284,6 +310,7 @@ filterUsed();
 console.log("publicPouch", publicPouch)
 console.log("used",used.sort());
 console.log("remainPouch", remainPouch);
+console.log("runboard", runBoard);
 
 
 /* Draw Card */
@@ -298,7 +325,9 @@ const drawCard = () => {
 }
 $drawbtn.on('click', function(){
     drawCard();
-    sortRack(playerTile);});
+    sortRack(playerTile);
+//render the update array
+});
 
 const renderDraw = (id) => {
         publicPouch.forEach(item => {
@@ -321,3 +350,27 @@ const updateTileCount = () => {
 }
 
 
+// const done = (runboard) => {
+//     if ( playerTile.length === 0 || computerTile.length === 0) {
+//         //anouncewinner();
+//     } else {
+//         if (playerTile) {
+            
+//         }
+//     }
+// 1. check if the rack is empty
+//     1. yes, announce winner
+//     2. no, check valid
+// 2. check valid
+//     1. check user tile count
+//         1. less then previous, next turn
+//         2. no change, draw a tile
+// }
+// let screenShot = {
+//     "remainPouch": "",
+//     "used": "",
+//     ""
+// }
+// const reverse = () => {
+
+// }
