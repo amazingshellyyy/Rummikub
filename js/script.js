@@ -1,6 +1,4 @@
 
-
-/* render the default tile in the playground */
 /* charToIndex */
 const cTI = {
     '1': 1,
@@ -28,7 +26,7 @@ const rTC = {
     "7": 4,
     "8": 4,
 }
-function setCharAt(str,index,chr) {
+const setCharAt = (str,index,chr) =>{
     if(index > str.length-1) return str;
     return str.substr(0,index) + chr + str.substr(index+1);
 }
@@ -48,7 +46,7 @@ const dict = {
     "13": 'd'
 }
 
-//random function
+/* random function */
 const random = (num) => {
     const randomId = [];
     for (let i = 0; i < publicPouch.length; i++) {
@@ -69,6 +67,7 @@ const random = (num) => {
     return randomId;
 }
 
+/* buildPouch */
 const publicPouch = [];
 let remainPouch = [];
 const buildPouch = () => {
@@ -86,6 +85,16 @@ const buildPouch = () => {
 buildPouch();
 const used = [];
 
+const screenShot = {
+    "computerTile": [],//strings in array. ["","",""]
+    "playerTile": [],//strings in array. ["","",""]
+    "runBoard": [],//strings in array. ["","",""]
+    "groupBoard": [],//Object or "@" in array and in. [[{},{},{},"@"],[{}{},{}],[@,@,@,@]]
+    "used": [],//string in array. ["","","",""]
+    "remainPouch": [],////string in array. ["","","",""]
+}
+
+
 let runRoots = [];
 let groupRoots = [];
 const getRoots = () => {
@@ -96,6 +105,12 @@ const getRoots = () => {
         } else if (roots[i][0] === "4" || roots[i][0] === "6") {
             groupRoots.push(roots[i]);
             groupRoots.sort();
+        } else {
+            for (let j = 0; j < used.length; j++) {
+                if (used.indexOf(roots[i]) !== -1) {
+                    used.splice(j,1);
+                }
+            }
         }
         for (let j = 1; j < groupRoots.length; j++) {
             if (groupRoots[j][1] === groupRoots[j-1][1]) {
@@ -113,9 +128,7 @@ const filterUsed = () => {
     })
     return remainPouch;
 }
-const filter = (item, arr) => {
-        return arr.indexOf(item) == -1;  // it doesn't exists in the used array === it hasn't been used
-    }
+
 const $groups = $('.groups');
 const $runs = $('.runs');
 
@@ -135,6 +148,7 @@ const generateRuns = (runRoots) => {
 }
 
 const renderRunBoard = (runBoard) => {
+    $('.runs > div').remove();
     for (let i = 0; i < runBoard.length; i++) {
         $runs.append(`<div id="r${i+1}" class="run"></div>`);
         for (let j = 0; j < runBoard[i].length; j++) {
@@ -153,6 +167,7 @@ const renderRunBoard = (runBoard) => {
 
 let groupBoard = [];
 const generateGroups = (groupRoots) => {
+    
     for (let i = 0; i < groupRoots.length; i++) {
         let g = [];
         publicPouch.forEach(item => {
@@ -177,6 +192,7 @@ const generateGroups = (groupRoots) => {
 }
 
 const renderGroupBoard = (groupBoard) => {
+    $('.groups > div').remove();
     for (let i = 0; i < groupBoard.length; i++) {
         $groups.append(`<div id="g${i}" class="group"></div>`);
         for (let j = 0; j < 4; j++) {
@@ -202,7 +218,7 @@ const sortRack = (rack) => {
         return 0;
       });
 }
-const generatePlayersTile = () => {
+const dealCards = () => {
     let arr = random(28);
     for (let i = 0; i < arr.length; i++) {
         if (i%2 === 0) {
@@ -212,11 +228,13 @@ const generatePlayersTile = () => {
         } 
     }
     sortRack(playerTile);
+    sortRack(computerTile)
 }
 
 //need solve = the player and computer is just getting the "id" of the tile not the whole object!
 const $playerRack = $('.player-rack');
-const showPlayerTile = (playerTile) => {
+const renderPlayerTile = (playerTile) => {
+    $('.player-rack > div').remove();
     for (let i = 0; i < playerTile.length; i++) {
         for (let j = 0; j < publicPouch.length; j++) {
             if (playerTile[i] === publicPouch[j].id) {
@@ -230,19 +248,13 @@ const showPlayerTile = (playerTile) => {
 const generatePlayground = () =>{
     generateRuns(runRoots);
     generateGroups(groupRoots);
-    generatePlayersTile();
-    showPlayerTile(playerTile);
+    dealCards();
+    renderPlayerTile(playerTile);
 };
 generatePlayground();
 filterUsed();
 
-console.log('runsR', runRoots);
-console.log('groupR', groupRoots);
-console.log("publicPouch", publicPouch)
-console.log("used",used.sort());
-console.log("remainPouch", remainPouch);
-console.log("runboard", runBoard);
-console.log('groupBoard',groupBoard);
+
 
 
 /* Draw Card */
@@ -258,6 +270,7 @@ const drawCard = () => {
 $drawbtn.on('click', function(){
     drawCard();
     sortRack(playerTile);
+    console.log("playerTile", playerTile);
 //render the update array
 });
 
@@ -296,11 +309,66 @@ const updateTileCount = () => {
 //         1. less then previous, next turn
 //         2. no change, draw a tile
 // }
-// let screenShot = {
-//     "remainPouch": "",
-//     "used": "",
-//     ""
-// }
-// const reverse = () => {
 
-// }
+const snap = () => {
+    deepClone(screenShot.computerTile, computerTile);
+    deepClone(screenShot.playerTile, playerTile);
+    deepClone(screenShot.runBoard, runBoard);
+    deepClone(screenShot.groupBoard, groupBoard);
+    deepClone(screenShot.used, used);
+    deepClone(screenShot.remainPouch, remainPouch);
+}
+
+const cleanUp =(object) => {
+    for (const key in object) {
+        object[key] = [];
+    }
+}
+
+
+const deepClone = (target,arr) => {
+    for (let i = 0; i < arr.length; i++) {
+        target.push(arr[i]);
+    }
+}
+
+const reverse = () => {
+    deepClone(computerTile,screenShot.computerTile);
+    deepClone(playerTile,screenShot.playerTile);
+    deepClone(runBoard,screenShot.runBoard);
+    deepClone(groupBoard,screenShot.groupBoard);
+    deepClone(used,screenShot.used);
+    deepClone(remainPouch,screenShot.remainPouch);
+    renderGroupBoard(groupBoard);
+    renderRunBoard(runBoard);
+    updateTileCount();
+}
+
+
+console.log('runsR', runRoots);
+console.log('groupR', groupRoots);
+console.log("publicPouch", publicPouch)
+console.log("used",used.sort());
+console.log("remainPouch", remainPouch);
+console.log("runBoard", runBoard);
+console.log("computerTile", computerTile);
+console.log("playerTile", playerTile);
+console.log('groupBoard',groupBoard);
+//test for screenshot and cleanup
+/* snap();
+console.log("screenShot",screenShot);
+cleanUp(screenShot);
+console.log("screenShot-AfterCleanUp",screenShot); */
+
+//test for rendering
+/* runBoard[7] = setCharAt(runBoard[7],3,"3");
+console.log("runBoard",runBoard);
+renderRunBoard(runBoard);
+
+groupBoard[0][0] = remainPouch[9];
+console.log("groupBoard", groupBoard);
+renderGroupBoard(groupBoard); 
+
+playerTile.shift();
+console.log("playerTile",playerTile);
+renderPlayerTile(playerTile); */
