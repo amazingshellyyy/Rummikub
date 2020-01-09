@@ -56,9 +56,9 @@ const random = (num) => {
             if (randomId.indexOf(id) == -1) {
                 randomId.push(id);
                 if (randomId.length === num) {
-                    for (let i = 0; i < randomId.length; i++) {
-                        used.push(randomId[i]);
-                    }
+                    // for (let i = 0; i < randomId.length; i++) {
+                    //     used.push(randomId[i]);
+                    // }
                     break;
                 }
             } 
@@ -99,6 +99,7 @@ let runRoots = [];
 let groupRoots = [];
 const getRoots = () => {
     let roots = random(8);
+    console.log("roots", roots);
     for (let i = 0; i < roots.length; i++) {
         if (roots[i][0] % 2 === 1 && cTI[roots[i][1]]>1 && cTI[roots[i][1]]<13 ) {
             runRoots.push(roots[i]);
@@ -106,17 +107,20 @@ const getRoots = () => {
             groupRoots.push(roots[i]);
             groupRoots.sort();
         } else {
-            for (let j = 0; j < used.length; j++) {
                 if (used.indexOf(roots[i]) !== -1) {
-                    used.splice(j,1);
+                    let index = used.indexOf(roots[i]);
+                    used.splice(index,1);
                 }
-            }
+            
         }
         for (let j = 1; j < groupRoots.length; j++) {
             if (groupRoots[j][1] === groupRoots[j-1][1]) {
                 groupRoots.splice(j-1,1);
             }
         }
+
+        //push to used and recover from used
+
         
     }
 }
@@ -128,6 +132,7 @@ const filterUsed = () => {
     })
     return remainPouch;
 }
+
 
 const $groups = $('.groups');
 const $runs = $('.runs');
@@ -154,11 +159,15 @@ const renderRunBoard = (runBoard) => {
         for (let j = 0; j < runBoard[i].length; j++) {
             publicPouch.forEach(item => {
                 if ( `${i+1}` === item.id[0] && dict[j+1] === item.number) {
-                    $(`#r${i+1}`).append(`<div class="tile" style="background-image:url('../images/${rTC[i+1]}-0${dict[j+1]}.svg')"></div>`);
+                    $(`#r${i+1}`).append(`<div class="tile" style="background-image:url('../images/${rTC[i+1]}-0${dict[j+1]}.svg')" color="${item.color}" number="${item.number}" location="${item.id}" ></div>`);
                 }
             })
             if (runBoard[i][j] !== "@") {
-                $(`#r${i+1} > div`).eq(j).addClass("highlight");
+                $(`#r${i+1} > div`).eq(j).addClass("highlight").attr('id',`${i+1}${dict[j+1]}`);
+                used.push(`${i+1}${dict[j+1]}`);
+            }
+            if (runBoard[i][j] === "@") {
+                $(`#r${i+1} > div`).eq(j).addClass("greyout");
             }
         }
     }
@@ -199,7 +208,8 @@ const renderGroupBoard = (groupBoard) => {
             $(`#g${i}`).append(`<div class="tile"></div>`)
             if (groupBoard[i][j] !== "@") {
                 $(`#g${i} > div`).eq(j).replaceWith(groupBoard[i][j].tile);
-                $(`#g${i} > div`).addClass("highlight");
+                $(`#g${i} > div`).addClass("highlight").attr('id',`${groupBoard[i][j].id}`);
+                used.push(`${groupBoard[i][j].id}`);
             }
         }
     }
@@ -220,7 +230,9 @@ const sortRack = (rack) => {
 }
 const dealCards = () => {
     let arr = random(28);
+    
     for (let i = 0; i < arr.length; i++) {
+        used.push(`${arr[i]}`);
         if (i%2 === 0) {
             computerTile.push(arr[i]);
         } else {
@@ -238,12 +250,10 @@ const renderPlayerTile = (playerTile) => {
     for (let i = 0; i < playerTile.length; i++) {
         for (let j = 0; j < publicPouch.length; j++) {
             if (playerTile[i] === publicPouch[j].id) {
-                $playerRack.append(`<div id="p${i}" class="tile highlight" style="background-image: url('../images/${publicPouch[j].color}-0${publicPouch[j].number}.svg');"></div>`)
+                $playerRack.append(`<div id="${playerTile[i]}" class="tile highlight" style="background-image: url('../images/${publicPouch[j].color}-0${publicPouch[j].number}.svg')" color="${publicPouch[j].color}" number="${publicPouch[j].number}"></div>`);
             }
         }
-        
     }
-    
 }
 const generatePlayground = () =>{
     generateRuns(runRoots);
@@ -271,6 +281,8 @@ $drawbtn.on('click', function(){
     drawCard();
     sortRack(playerTile);
     console.log("playerTile", playerTile);
+    console.log("drawUsed", used);
+    console.log("remain", remainPouch.sort());
 //render the update array
 });
 
@@ -281,6 +293,7 @@ const renderDraw = (id) => {
                 let num = id.slice(1,2);
                 let preid = parseInt($('.player-rack div:last-child').attr("id").slice(1,3));
                 $playerRack.append(`<div id="p${preid + 1}" class="tile highlight" style="background-image: url('../images/${color}-0${num}.svg');"></div>`)
+                used.push(item.id);
             }
         })
         
@@ -344,6 +357,8 @@ const reverse = () => {
     updateTileCount();
 }
 
+$('.reverse').on('click',reverse);
+
 
 console.log('runsR', runRoots);
 console.log('groupR', groupRoots);
@@ -372,3 +387,81 @@ renderGroupBoard(groupBoard);
 playerTile.shift();
 console.log("playerTile",playerTile);
 renderPlayerTile(playerTile); */
+
+let color1 = "";
+let number1 = "";
+let color2 = "";
+let number2 = "";
+let id1 = "";
+let id2 = "";
+
+const makeTileDraggable =() => {
+    console.log('makeTileDraggable');
+    $('.tile.highlight').draggable({
+        revert: invalidHolder
+    });
+    $('.tile').on('drag', function() {
+        console.log("onDrag");
+        color1 = $(this).attr('color');
+        // console.log("color1",color1);
+        number1 = $(this).attr('number');
+        id1 = $(this).attr('id');
+        console.log("id1",id1);
+    })
+    
+}
+const makeGreyOutDroppable = () => {
+    console.log('makeGreyOutDroppable');
+    $('.tile').on('drop', function() {
+        color2 = $(this).attr('color');
+        number2 = $(this).attr('number');
+        id2 = $(this).attr('location');
+        console.log("id2",id2);
+    })
+    $('.greyout').droppable({
+        accept: $('.tile'),
+        drop: updateRunBoard
+    });
+
+}
+
+
+$playerTile = $('.player-rack > div');
+$runBoardHolder = $('.runs > .run > div');
+const invalidHolder = () => {
+    console.log('invalidHolder')
+    if (color1 !== color2 || number1 !== number2) {
+        return true;
+    }
+}
+const updateRunBoard =() => {
+    console.log('updaterunboardworking');
+    let targetIndex = parseInt(id1[0])-1;
+    let fromIndex2 = parseInt(id2[0])-1;
+    let abcdnumber = number1;
+    console.log("fromIndex2",fromIndex2);
+    console.log("num2-1",cTI[number2]-1);
+    console.log("targetIndex",targetIndex);
+    console.log("num1 -1", cTI[number1]-1);
+    console.log('abcdnumber',abcdnumber);
+   
+    runBoard[fromIndex2] = setCharAt(runBoard[fromIndex2],cTI[number2]-1,abcdnumber);
+    runBoard[targetIndex] = setCharAt(runBoard[targetIndex],cTI[number1]-1,"@");
+    
+    renderRunBoard(runBoard);
+    makeTileDraggable();
+    makeGreyOutDroppable();
+    console.log("updaterunboard",runBoard);
+}
+// console.log($runBoardHolder);
+
+
+
+
+
+
+
+
+
+makeTileDraggable();
+makeGreyOutDroppable();
