@@ -274,6 +274,8 @@ const renderPlayerTile = (playerTile) => {
             }
         }
     }
+    
+    return playerTile;
 }
 const generatePlayground = () =>{
     generateRuns(runRoots);
@@ -424,58 +426,76 @@ let id2 = "";
 const makeTileDraggable =() => {
     console.log('makeTileDraggable');
     $('.tile.highlight').draggable({
-        revert: invalidHolder
+        revert: invalidHolder,
     });
     $('.tile').on('drag', function() {
         draggingDiv = $(this);
-        console.log("draggingDiv",draggingDiv);
-        console.log("onDrag");
+        // console.log("draggingDiv",draggingDiv);
+        // console.log("onDrag");
         color1 = $(this).attr('color');
-        console.log("color1",color1);
-        console.log("number1",number1);
+        // console.log("color1",color1);
+        // console.log("number1",number1);
         number1 = $(this).attr('number');
         id1 = $(this).attr('id');
-        console.log("id1",id1);
+        // console.log("id1",id1);
         draggingLo = $(this).attr("location");
-        console.log("draggingLo",draggingLo);
+        // console.log("draggingLo",draggingLo);
         draggingDivParent = $(this).parents('.player-rack');
-        console.log('draggingDivParent',draggingDivParent);
-        console.log($('.player-rack'));
-
+        // console.log('draggingDivParent',draggingDivParent);
+        // console.log($('.player-rack'));
     })
+    
+    $('.player-rack > div').on('dragstop',function() {
+        if (!invalidHolder()) {
+            console.log('updateplayerrackworking');
+            console.log("playerTileBefore",playerTile);
+            let index = playerTile.indexOf(`${id1}`);
+            if (index !== -1) {
+                console.log("id1 in updateplayer",id1);
+                console.log('index',index);
+                playerTile.splice(index,1);
+                console.log("playerTileAfterSplice",playerTile);
+                renderPlayerTile(playerTile);
+                makeTileDraggable();
+                updateTileCount();
+            }
+            /* if have "12" and "22", drop "12" on row1 column2, and drop "22" on row1 column2 will cause the tile disappear*/
+        }
+    })
+    
     
 }
 const makeTileDroppable = () => {
     console.log('makeTileDroppable');
     $('.greyout').droppable({
-        accept: $('.tile'),
         drop: updateRunboard
     });
-    $('.tile').on('drop', function() {
+    $('.tile.greyout').on('drop', function() {
         droppingPlace = $(this);
-        console.log("droppingPlace",droppingPlace);
+        // console.log("droppingPlace",droppingPlace);
         color2 = $(this).attr('color');
         console.log("color2",color2);
         number2 = $(this).attr('number');
         console.log("number2", number2);
         id2 = $(this).attr("location").split(' ')[0];
         droppingLo = $(this).attr("location");
-        console.log("droppingLo", droppingLo);
+        // console.log("droppingLo", droppingLo);
     })
-    $('.player-rack > div').droppable({
-        drop: updatePlayerRack
-    })
+    
+    
 }
 
-
-$playerTile = $('.player-rack > div');
-$runBoardHolder = $('.runs > .run > div');
 const invalidHolder = () => {
     console.log('invalidHolder');
-    if (droppingLo.split("").indexOf(id1) !== -1) {
+    console.log('color2',color2);
+    console.log('number2',number2);
+    if ( color1 !== color2 || number1 !== number2) {
         return true;
     }
 }
+
+// $playerTile = $('.player-rack > div');
+// $runBoardHolder = $('.runs > .run > div');
 const updateRunboard =() => {
     
     if (!invalidHolder()) {
@@ -508,13 +528,21 @@ const updateRunboard =() => {
     }
 }
 
-const updatePlayerRack = ()=> {
-    console.log('HIii');
-    console.log(`Comparing ${draggingDivParent.attr("class")} and  ${$playerRack.attr('class')}`)
-    if (draggingDivParent.attr("class") === $playerRack.attr('class')) {
-        console.log("playerOut!");
-    };
-}
+// const updatePlayerRack = (playerTile)=> {
+//     console.log('updateplayerrackworking');
+//     // if (draggingDivParent.attr("class") === $playerRack.attr('class')) {
+        
+//         console.log("playerTileBefore",playerTile);
+//         let index = playerTile.indexOf(id1);
+        
+//         console.log("id1 in updateplayer",id1);
+//         console.log('index',index);
+//         playerTile.splice(index,1);
+//         console.log("playerTileAfterSplice",playerTile);
+//         renderPlayerTile(playerTile);
+        
+//     // };
+// }
 
 // console.log($runBoardHolder);
 
@@ -526,5 +554,8 @@ const updatePlayerRack = ()=> {
 
 
 
+
 makeTileDraggable();
 makeTileDroppable();
+
+console.log(runBoard);
