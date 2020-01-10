@@ -76,7 +76,7 @@ const buildPouch = () => {
             if (i%2 === 1) {
                 publicPouch.push({
                     "id": `${i}${dict[j]}`,
-                    "tile": `<div id="${i}${dict[j]}" class="tile" style="background-image:url('/images/${rTC[i]}-0${dict[j]}.svg')" location="${i}${dict[j]} ${i+1}${dict[j]}" color="${rTC[i]}" number="${dict[j]}"></div>`,
+                    "tile": `<div id="${i}${dict[j]}" class="tile" style="background-image:url('Rummikub/images/${rTC[i]}-0${dict[j]}.svg')" location="${i}${dict[j]} ${i+1}${dict[j]}" color="${rTC[i]}" number="${dict[j]}"></div>`,
                     "color": rTC[i],
                     "number": `${dict[j]}`,
                     "location": `${i}${dict[j]} ${i+1}${dict[j]}`
