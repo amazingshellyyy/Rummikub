@@ -149,7 +149,7 @@ body {
 
 .start {
     z-index: 2;
-    position: absolute;
+    position: fixed;
     height: 60vh;
     width: 60vw;
     top: 20vh;
