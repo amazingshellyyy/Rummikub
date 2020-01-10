@@ -79,7 +79,8 @@ const buildPouch = () => {
                     "tile": `<div id="${i}${dict[j]}" class="tile" style="background-image:url('./images/${rTC[i]}-0${dict[j]}.svg')" location="${i}${dict[j]} ${i+1}${dict[j]}" color="${rTC[i]}" number="${dict[j]}"></div>`,
                     "color": rTC[i],
                     "number": `${dict[j]}`,
-                    "location": `${i}${dict[j]} ${i+1}${dict[j]}`
+                    "location": `${i}${dict[j]} ${i+1}${dict[j]}`,
+                     "curlo": ``
                 });
             } else {
                 publicPouch.push({
@@ -87,7 +88,8 @@ const buildPouch = () => {
                     "tile": `<div id="${i}${dict[j]}" class="tile" style="background-image:url('./images/${rTC[i]}-0${dict[j]}.svg')" location="${i}${dict[j]} ${i-1}${dict[j]}" color="${rTC[i]}" number="${dict[j]}"></div>`,
                     "color": rTC[i],
                     "number": `${dict[j]}`,
-                    "location": `${i}${dict[j]} ${i-1}${dict[j]}`
+                    "location": `${i}${dict[j]} ${i-1}${dict[j]}`,
+                    "curlo": ``
                 });
             }
         }
@@ -175,11 +177,11 @@ const renderRunBoard = (runBoard) => {
                 }
             })
             if (runBoard[i][j] !== "@") {
-                $(`#r${i+1} > div`).eq(j).addClass("highlight");
+                $(`#r${i+1} > div`).eq(j).addClass("highlight").attr('curlo',"R");
                 used.push(`${i+1}${dict[j+1]}`);
             }
             if (runBoard[i][j] === "@") {
-                $(`#r${i+1} > div`).eq(j).addClass("greyout").removeAttr('id');
+                $(`#r${i+1} > div`).eq(j).addClass("greyout").removeAttr('id').attr('curlo',"RH");;
 
             }
         }
@@ -218,10 +220,10 @@ const renderGroupBoard = (groupBoard) => {
     for (let i = 0; i < groupBoard.length; i++) {
         $groups.append(`<div id="g${i}" class="group"></div>`);
         for (let j = 0; j < 4; j++) {
-            $(`#g${i}`).append(`<div class="tile faceback" gindex="${i}" eindex="${j}"></div>`);
+            $(`#g${i}`).append(`<div class="tile faceback" gindex="${i}" eindex="${j}" curlo="GH")></div>`);
             if (groupBoard[i][j] !== "@") {
                 $(`#g${i} > div`).eq(j).replaceWith(groupBoard[i][j].tile)
-                $(`#g${i} > div`).eq(j).attr('gindex',`${i}`).attr('eindex',`${j}`);
+                $(`#g${i} > div`).eq(j).attr('gindex',`${i}`).attr('eindex',`${j}`).attr("curlo","G");
                 $(`#g${i} > div`).eq(j).addClass("highlight");
                 used.push(`${groupBoard[i][j].id}`);
             }
@@ -245,7 +247,8 @@ const sortRack = (rack) => {
 const dealCards = () => {
     //manual win state
     // let arr = random(1); 
-    let arr = random(28);
+    let arr = random(6);
+    // let arr = random(28);
     for (let i = 0; i < arr.length; i++) {
         used.push(`${arr[i]}`);
         if (i%2 === 0) {
@@ -266,7 +269,7 @@ const renderPlayerTile = (playerTile) => {
         for (let j = 0; j < publicPouch.length; j++) {
             if (playerTile[i] === publicPouch[j].id) {
                 $playerRack.append(publicPouch[j].tile);
-                $('.player-rack > div').addClass("highlight");
+                $('.player-rack > div').addClass("highlight").attr("curlo", "P");
             }
         }
     }
@@ -401,8 +404,8 @@ const generatePlayground = () =>{
     playerTile = [];
     computerTile = [];
     getRoots();
-    console.log("inGPafter[",runBoard);
-    console.log("inGPafter[",groupBoard);
+    // console.log("inGPafter[",runBoard);
+    // console.log("inGPafter[",groupBoard);
     generateRuns(runRoots);
     generateGroups(groupRoots);
     dealCards();
@@ -454,6 +457,8 @@ let droppingGIndex = "";
 let droppingEIndex = "";
 let draggingGIndex = "";
 let draggingEIndex = "";
+let draggingCurlo = "";
+let droppingCurlo = "";
 
 
 const invalidHolder = () => {
@@ -463,7 +468,8 @@ const invalidHolder = () => {
     console.log('color2',color2);
     console.log('number2',number2);
     console.log(runBoard);
-    if (!!color1 && !!color2 && !!number1 && !!number2) {
+    console.log(droppingCurlo);
+    if (droppingCurlo ==="RH") {
         if ( color1 !== color2 || number1 !== number2) {
             console.log('It is true!');
             console.log(runBoard);
@@ -476,7 +482,7 @@ const invalidHolder = () => {
 
 //Make Tiles Draggable and listen to function
 const makeTileDraggable =() => {
-console.log('makeTileDraggable');
+console.log('makeTileDraggable!');
 $('.tile').on('drag', function() {
     console.log(".tile is listening!");
     console.log(this);
@@ -498,7 +504,8 @@ $('.tile').on('drag', function() {
     // draggingEIndex = $(this).attr('eIndex');
     draggingGIndex = $(this).attr('gindex');
     draggingEIndex = $(this).attr('eindex');
-
+    draggingCurlo = $(this).attr('curlo');
+    console.log("draggingCurlo",draggingCurlo);
 })
 $('.tile.highlight').draggable({
     revert: invalidHolder,
@@ -506,7 +513,7 @@ $('.tile.highlight').draggable({
 $('.player-rack > div').on('dragstop',function() {
     // if (!invalidHolder()) {
         console.log('updateplayerrackworking');
-        console.log("playerTileBefore",playerTile);
+        // console.log("playerTileBefore",playerTile);
         let index = playerTile.indexOf(`${id1}`);
         if (index !== -1) {
             console.log("id1 in updateplayer",id1);
@@ -524,15 +531,94 @@ $('.player-rack > div').on('dragstop',function() {
 
 //Make tile droppable 
 const updatePlayGround = () => {
-    updateRunboard();
-    updateGroupBoard();
     makeTileDraggable();
     makeTileDroppable();
+    if (draggingCurlo === "P" && droppingCurlo === "RH") {
+        console.log('fr P to RH');
+        updateRunboard();
+        renderRunBoard(runBoard);
+        // updateGroupBoard();
+        // renderGroupBoard(groupBoard);
+        makeTileDraggable();
+        makeTileDroppable();
+    } else if (draggingCurlo === "P" && droppingCurlo === "GH") {
+        console.log('fr P to GH');
+        // updateRunboard();
+        // renderRunBoard(runBoard);
+        updateGroupBoard();
+        renderGroupBoard(groupBoard);
+        makeTileDraggable();
+        makeTileDroppable();
+    } else if (draggingCurlo === "R" && droppingCurlo === "RH"){
+        console.log('fr R to RH');
+        updateRunboard();
+        renderRunBoard(runBoard);
+        // updateGroupBoard();
+        // renderGroupBoard(groupBoard);
+        makeTileDraggable();
+        makeTileDroppable();
+    } else if (draggingCurlo === "R" && droppingCurlo === "GH"){
+        console.log('fr R to GH');
+        updateRunboard();
+        renderRunBoard(runBoard);
+        updateGroupBoard();
+        renderGroupBoard(groupBoard);
+        makeTileDraggable();
+        makeTileDroppable();
+    } else if (draggingCurlo === "G" && droppingCurlo === "GH") {
+        console.log('fr G to GH');
+        // updateRunboard();
+        // renderRunBoard(runBoard);
+        updateGroupBoard();
+        renderGroupBoard(groupBoard);
+        makeTileDraggable();
+        makeTileDroppable();
+    } else {
+        console.log('fr G to RH');
+        updateRunboard();
+        renderRunBoard(runBoard);
+        updateGroupBoard();
+        renderGroupBoard(groupBoard);
+        makeTileDraggable();
+        makeTileDroppable();
+        // (draggingCurlo === "G" && draggingCurlo ==="RH")
+    }
+    // P -> G
+    /* if (!draggingGIndex && !!droppingGIndex!color2 && !number2) {
+        console.log('p to g');
+        console.log("color2", color2);
+        // updateRunboard();
+        updateGroupBoard();
+        renderGroupBoard(groupBoard);
+
+        makeTileDraggable();
+        makeTileDroppable();
+    } else if (!color2 && !number2){
+        // R ->G
+        console.log('r -> g');
+        updateRunboard();
+        renderRunBoard(runBoard);
+        updateGroupBoard();
+        renderGroupBoard(groupBoard);
+        makeTileDraggable();
+        makeTileDroppable();
+
+    } */
+    
+    // updateRunboard();
+    //     renderRunBoard(runBoard);
+    //     updateGroupBoard();
+    //     renderGroupBoard(groupBoard);
+    //     makeTileDraggable();
+    //     makeTileDroppable();
     console.log(runBoard);
+    console.log(groupBoard);
+
 }
 
 
 const makeTileDroppable = () => {
+    console.log('makeTileDroppable!');
     $('.tile.faceback').on('drop', function(event){
         droppingGIndex = "";
         droppingEIndex = "";
@@ -551,8 +637,10 @@ const makeTileDroppable = () => {
         console.log("droppingGIndex", droppingGIndex);
         console.log('droppingEIndex',droppingEIndex);
         // droppingEIndex = $(this).attr('eindex');
+        droppingCurlo = $(this).attr('curlo');
+        console.log("droppingCurlo",droppingCurlo);
     })
-    console.log('makeTileDroppable');
+    
     $('.greyout').droppable({
         drop: updatePlayGround
     });
@@ -571,6 +659,8 @@ const makeTileDroppable = () => {
         id2 = $(this).attr("location").split(' ')[0];
         droppingLo = $(this).attr("location");
         // console.log("droppingLo", droppingLo);
+        droppingCurlo = $(this).attr('curlo');
+        console.log("droppingCurlo",droppingCurlo);
     })
 }
 
@@ -621,9 +711,6 @@ const updateGroupBoard = () => {
     console.log("updatedGroupboard", groupBoard);
 }
 
-
-
-
 // $playerTile = $('.player-rack > div');
 // $runBoardHolder = $('.runs > .run > div');
 const updateRunboard =() => {
@@ -646,7 +733,7 @@ const updateRunboard =() => {
     updateGroupBoard();
     renderGroupBoard(groupBoard);
     // R->R
-    if (!invalidHolder()) {
+    if (draggingCurlo === "R" && droppingCurlo === "RH") {
         //updateRunBoard
         console.log('updateRunboard!');
         let draggingIndex = parseInt(id1[0])-1;
@@ -681,23 +768,32 @@ const updateRunboard =() => {
         makeTileDroppable();
         makeTileDraggable();
         renderRunBoard(runBoard);
-    } else {
+    }
 
-       
+    if (draggingCurlo === "G" && droppingCurlo === "RH") {
+        console.log("get in G to RH");
+        console.log(numToupdate);
+        console.log(droppingIndex);
+        runBoard[droppingIndex] = setCharAt(runBoard[droppingIndex],cTI[number1]-1,numToupdate);
+    }  
         // updateRunboard();
         makeTileDroppable();
         makeTileDraggable();
-    }
+    
 
     //from runboard to groupboard
-   
+    if (draggingCurlo ==="R" && droppingCurlo === "GH") {
+        runBoard[draggingIndex] = setCharAt(runBoard[draggingIndex],cTI[number1]-1,"@");
+        console.log('Get in.....!!!!!!')
+        console.log(runBoard);
+    }
+    if (draggingCurlo === "P" && droppingCurlo === "RH") {
+        console.log(droppingIndex);
+        runBoard[droppingIndex] = setCharAt(runBoard[droppingIndex],cTI[number1]-1,numToupdate);
+    }
     makeTileDroppable();
     makeTileDraggable();
 }
-
-
-
-
 
 console.log(runBoard);
 
@@ -757,14 +853,13 @@ const validation = () => {
         //check the color
         let color = ["1","2","3","4"];
         for (let j = 0; j < innerArr.length; j++) {
-            console.log("color",color);
-            console.log("innerArr",innerArr);
+            
             let elc = `${innerArr[j].color}`;
             if (color.indexOf(elc) !== -1) {
                 let index = color.indexOf(elc);
-                console.log("colorBefore",color);
+                
                 color.splice(index ,0);
-                console.log("colorAfter",color);
+                
             } else {
                 console.log('groupboard failed at color!')
                 return false;
@@ -821,11 +916,11 @@ $('.restart').on('click', ()=> {
     $('.win').css('display','none');
     $('.start').css('display',"none");
     $('.container1, .container2, .container3').css('filter','');
-    console.log("bf GP",runBoard);
-    console.log("bf GP",groupBoard);
+    // console.log("bf GP",runBoard);
+    // console.log("bf GP",groupBoard);
     generatePlayground();
-    console.log("afterGP",runBoard);
-    console.log("afterGP",groupBoard);
+    // console.log("afterGP",runBoard);
+    // console.log("afterGP",groupBoard);
 });
 
 $('.startbtn').on('click', ()=> {
