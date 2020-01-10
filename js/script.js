@@ -243,8 +243,9 @@ const sortRack = (rack) => {
       });
 }
 const dealCards = () => {
-    let arr = random(4);
-    
+    //manual win state
+    // let arr = random(1); 
+    let arr = random(28);
     for (let i = 0; i < arr.length; i++) {
         used.push(`${arr[i]}`);
         if (i%2 === 0) {
@@ -337,11 +338,26 @@ const updateTileCount = () => {
 
 
 
-const cleanUp =(object) => {
-    for (const key in object) {
-        object[key] = [];
-    }
+const cleanUp =(target) => {
+    console.log("target",target);
+    let newtarget = target;
+   for (let i = 0; i < target.length; i++) {
+       console.log(i,'start poping');
+    //    console.log(i);
+       console.log(target.length);
+       if(target.length > 0) {
+
+           target.pop();
+       } else {
+           
+           console.log(target.pop());
+           console.log(i);
+           break;
+       }
+   }
+   return target;
 }
+
 
 
 const deepClone = (target,arr) => {
@@ -380,14 +396,23 @@ const reverse = (screenShot) => {
 
 $('.reverse').on('click',reverse);
 const generatePlayground = () =>{
+    runBoard =[];
+    groupBoard = [];
+    playerTile = [];
+    computerTile = [];
+    getRoots();
+    console.log("inGPafter[",runBoard);
+    console.log("inGPafter[",groupBoard);
     generateRuns(runRoots);
     generateGroups(groupRoots);
     dealCards();
     renderPlayerTile(playerTile);
-    snap();
+    // snap();
+    makeTileDraggable();
+    makeTileDroppable();
+
 };
-generatePlayground();
-filterUsed();
+
 
 // console.log('runsR', runRoots);
 // console.log('groupR', groupRoots);
@@ -757,7 +782,10 @@ const validation = () => {
 const done = ()=> {
     if (validation() === true) {
         if (playerTile.length === 0) {
-            alert('You Rock!!!')
+            alert('You Rock!!!');
+            $('.container1, .container2, .container3').css('filter','blur(2px)');
+            $('.win').css('display', "");
+            
             //end Game
         } else {
             alert('Draw one Card and keep Going!');
@@ -778,3 +806,32 @@ const done = ()=> {
 
 $('.done').on('click', done);
 
+
+$('.restart').on('click', ()=> {
+    // history.go(0);
+    // window.location.reload();
+    // console.log("runboard bf clean clean",runBoard);
+    // cleanUp(runBoard);
+    // console.log("runboard after clean",runBoard);
+    // console.log("groupboard bf clean clean",groupBoard);
+    // cleanUp(groupBoard);
+    // console.log("groupboard after clean",groupBoard);
+    runRoots = [];
+    groupRoots = [];
+    $('.win').css('display','none');
+    $('.start').css('display',"none");
+    $('.container1, .container2, .container3').css('filter','');
+    console.log("bf GP",runBoard);
+    console.log("bf GP",groupBoard);
+    generatePlayground();
+    console.log("afterGP",runBoard);
+    console.log("afterGP",groupBoard);
+});
+
+$('.startbtn').on('click', ()=> {
+    $('.start').css('display',"none");
+    $('.container1, .container2, .container3').css('filter','');
+})
+
+generatePlayground();
+filterUsed();

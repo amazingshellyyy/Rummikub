@@ -11,8 +11,13 @@ body {
 .container1 {
     display: flex;
     flex-direction: row;
-    /* justify-content: space-between; */
-    margin: 10px;
+    justify-content: center;
+    margin-bottom: 10px;
+    margin-top: 30px;
+}
+.container1 h1 {
+    margin-block-end:0;
+    margin-block-start: 0;
 }
 .container2 {
     display: flex;
@@ -26,7 +31,8 @@ body {
     justify-content: center;
     align-self: flex-end;
     width: 100%;
-    margin: 10px;
+    margin-top: 10px;
+    margin-bottom: 30px;
 }
 
 .computer-info, .player-info {
@@ -128,4 +134,36 @@ body {
     box-shadow: 1px 2px 4px rgba(0, 0, 0, .5);
     /* cursor: move; */
     cursor: pointer;
+}
+
+.win {
+    position: fixed;
+    height: 60vh;
+    width: 60vw;
+    top: 20vh;
+    left: 20vw;
+    background-color:burlywood ;
+    border-radius: 15px;
+    text-align: center;
+}
+
+.start {
+    position: fixed;
+    height: 60vh;
+    width: 60vw;
+    top: 20vh;
+    left: 20vw;
+    background-color:burlywood ;
+    border-radius: 15px;
+    text-align: center;
+}
+
+.win h2 {
+    margin-top:50px;
+}
+
+
+
+.filter {
+filter: blur(4px);
 }
