@@ -224,7 +224,7 @@ const renderGroupBoard = (groupBoard) => {
     for (let i = 0; i < groupBoard.length; i++) {
         $groups.append(`<div id="g${i}" class="group"></div>`);
         for (let j = 0; j < 4; j++) {
-            $(`#g${i}`).append(`<div class="tile"></div>`)
+            $(`#g${i}`).append(`<div class="tile faceback" gIndex="${i}" eIndex="${j}"></div>`);
             if (groupBoard[i][j] !== "@") {
                 $(`#g${i} > div`).eq(j).replaceWith(groupBoard[i][j].tile);
                 $(`#g${i} > div`).addClass("highlight");
@@ -414,6 +414,7 @@ renderPlayerTile(playerTile); */
 let draggingDiv = {};
 let draggingDivParent = {};
 let droppingPlace = {};
+let droppingGroup = {};
 let draggingLo = "";
 let droppingLo = "";
 let color1 = "";
@@ -422,11 +423,14 @@ let color2 = "";
 let number2 = "";
 let id1 = "";
 let id2 = "";
+let droppingGIndex = "";
+let droppingEIndex = "";
+
 
 const makeTileDraggable =() => {
     console.log('makeTileDraggable');
     $('.tile.highlight').draggable({
-        revert: invalidHolder,
+        // revert: invalidHolder,
     });
     $('.tile').on('drag', function() {
         draggingDiv = $(this);
@@ -446,7 +450,7 @@ const makeTileDraggable =() => {
     })
     
     $('.player-rack > div').on('dragstop',function() {
-        if (!invalidHolder()) {
+        // if (!invalidHolder()) {
             console.log('updateplayerrackworking');
             console.log("playerTileBefore",playerTile);
             let index = playerTile.indexOf(`${id1}`);
@@ -460,7 +464,8 @@ const makeTileDraggable =() => {
                 updateTileCount();
             }
             /* if have "12" and "22", drop "12" on row1 column2, and drop "22" on row1 column2 will cause the tile disappear*/
-        }
+        // }
+
     })
     
     
@@ -472,7 +477,7 @@ const makeTileDroppable = () => {
     });
     $('.tile.greyout').on('drop', function() {
         droppingPlace = $(this);
-        // console.log("droppingPlace",droppingPlace);
+        console.log("droppingPlace",droppingPlace);
         color2 = $(this).attr('color');
         console.log("color2",color2);
         number2 = $(this).attr('number');
@@ -482,8 +487,39 @@ const makeTileDroppable = () => {
         // console.log("droppingLo", droppingLo);
     })
     
+    $('.tile.faceback').droppable({
+        // accept: $('.tile.highlight'),
+        drop: updateGroupBoard
+    })
+    $('.tile.faceback').on('drop', function(){
+        droppingGroup = $(this);
+        console.log(droppingGroup);
+        droppingGIndex = $(this).attr('gIndex');
+        droppingEIndex = $(this).attr('eIndex');
+    })
     
 }
+
+const updateGroupBoard = () => {
+    console.log("updateGroupBoardworking!");
+    console.log('gIndex', droppingGIndex);
+    console.log('eIndex', droppingEIndex);
+    console.log(publicPouch);
+    console.log(groupBoard[parseInt(droppingGIndex)]);
+    console.log(groupBoard[parseInt(droppingGIndex)][parseInt(droppingEIndex)]);
+    publicPouch.forEach(item => {
+        if (id1 === item.id) {
+            groupBoard[parseInt(droppingGIndex)][parseInt(droppingEIndex)] = item;
+        }
+    })
+    renderGroupBoard(groupBoard);
+    makeTileDraggable();
+    makeTileDroppable();
+    console.log("updatedGroupboard", groupBoard);
+    
+}
+
+
 
 const invalidHolder = () => {
     console.log('invalidHolder');
@@ -528,34 +564,43 @@ const updateRunboard =() => {
     }
 }
 
-// const updatePlayerRack = (playerTile)=> {
-//     console.log('updateplayerrackworking');
-//     // if (draggingDivParent.attr("class") === $playerRack.attr('class')) {
-        
-//         console.log("playerTileBefore",playerTile);
-//         let index = playerTile.indexOf(id1);
-        
-//         console.log("id1 in updateplayer",id1);
-//         console.log('index',index);
-//         playerTile.splice(index,1);
-//         console.log("playerTileAfterSplice",playerTile);
-//         renderPlayerTile(playerTile);
-        
-//     // };
-// }
-
-// console.log($runBoardHolder);
-
-
-
-
-
-
-
-
-
-
 makeTileDraggable();
 makeTileDroppable();
 
 console.log(runBoard);
+
+
+const DoneValidation = () => {
+    let checkArr = [];
+    const regex = /\w+/g;
+    for (let i = 0; i < runBoard.length; i++) {
+        let run = runBoard[i].match(regex);
+        if (run !== null) {
+            checkArr.push(runBoard[i].match(regex));
+        } 
+            
+                // checkArr.push(run[j]);
+            
+        
+    }
+    for (let i = 0; i < checkArr.length; i++) {
+        console.log('checkArr[i]',checkArr[i]);
+        // if (typeof checkArr[i] !== "string") {
+        //     checkArr.push(checkArr[i][0]);
+        //     checkArr.splice(i,1);
+        // }
+        // for (let j = 0; j < checkArr[i].length; j++) {
+        //     console.log('checkArr[i][j]',checkArr[i][j]);
+        //     if (checkArr[i][j].length < 3){
+        //         console.log("have to reverse");
+        //         return false;
+        //     }
+            
+        // }
+    }
+    
+    console.log('checkArr',checkArr);
+}
+DoneValidation();
+
+$('.done').on('click',DoneValidation);
