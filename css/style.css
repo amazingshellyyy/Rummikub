@@ -108,7 +108,7 @@ body {
     /* border: 1px solid darkgray; */
     width: 2.8vw;
     margin-left: 5px;
-    background-image: url("/images/tileBack.png");
+    background-image: url("./images/tileBack.png");
     background-repeat: no-repeat;
     background-size: cover;
     opacity: 0.25;
