@@ -170,14 +170,7 @@ const renderRunBoard = (runBoard) => {
         for (let j = 0; j < runBoard[i].length; j++) {
             publicPouch.forEach(item => {
                 if ( `${i+1}` === item.id[0] && dict[j+1] === item.number) {
-                    // if ((i+1) %2 === 1) {
-                    //     $(`#r${i+1}`).append(`<div class="tile" style="background-image:url('../images/${rTC[i+1]}-0${dict[j+1]}.svg')" color="${item.color}" number="${item.number}" location="${item.id} ${i+2}${item.number}" ></div>`);
-                    // } else {
-                    // $(`#r${i+1}`).append(`<div class="tile" style="background-image:url('../images/${rTC[i+1]}-0${dict[j+1]}.svg')" color="${item.color}" number="${item.number}" location="${item.id} ${i}${item.number}" ></div>`);
-                    // }
-                    
                     $(`#r${i+1}`).append(item.tile);
-                    
                 }
             })
             if (runBoard[i][j] !== "@") {
@@ -226,8 +219,9 @@ const renderGroupBoard = (groupBoard) => {
         for (let j = 0; j < 4; j++) {
             $(`#g${i}`).append(`<div class="tile faceback" gIndex="${i}" eIndex="${j}"></div>`);
             if (groupBoard[i][j] !== "@") {
-                $(`#g${i} > div`).eq(j).replaceWith(groupBoard[i][j].tile);
-                $(`#g${i} > div`).addClass("highlight");
+                $(`#g${i} > div`).eq(j).replaceWith(groupBoard[i][j].tile)
+                $(`#g${i} > div`).eq(j).attr('gIndex',`${i}`).attr('eIndex',`${j}`);
+                $(`#g${i} > div`).eq(j).addClass("highlight");
                 used.push(`${groupBoard[i][j].id}`);
             }
         }
@@ -425,6 +419,8 @@ let id1 = "";
 let id2 = "";
 let droppingGIndex = "";
 let droppingEIndex = "";
+let draggingGIndex = "";
+let draggingEIndex = "";
 
 
 const makeTileDraggable =() => {
@@ -437,8 +433,8 @@ const makeTileDraggable =() => {
         // console.log("draggingDiv",draggingDiv);
         // console.log("onDrag");
         color1 = $(this).attr('color');
-        // console.log("color1",color1);
-        // console.log("number1",number1);
+        console.log("color1",color1);
+        console.log("number1",number1);
         number1 = $(this).attr('number');
         id1 = $(this).attr('id');
         // console.log("id1",id1);
@@ -447,6 +443,8 @@ const makeTileDraggable =() => {
         draggingDivParent = $(this).parents('.player-rack');
         // console.log('draggingDivParent',draggingDivParent);
         // console.log($('.player-rack'));
+        draggingGIndex = $(this).attr('gIndex');
+        draggingEIndex = $(this).attr('eIndex');
     })
     
     $('.player-rack > div').on('dragstop',function() {
@@ -473,7 +471,7 @@ const makeTileDraggable =() => {
 const makeTileDroppable = () => {
     console.log('makeTileDroppable');
     $('.greyout').droppable({
-        drop: updateRunboard
+        drop: updatePlayGround
     });
     $('.tile.greyout').on('drop', function() {
         droppingPlace = $(this);
@@ -488,8 +486,7 @@ const makeTileDroppable = () => {
     })
     
     $('.tile.faceback').droppable({
-        // accept: $('.tile.highlight'),
-        drop: updateGroupBoard
+        drop: updatePlayGround
     })
     $('.tile.faceback').on('drop', function(){
         droppingGroup = $(this);
@@ -502,9 +499,12 @@ const makeTileDroppable = () => {
 
 const updateGroupBoard = () => {
     console.log("updateGroupBoardworking!");
-    console.log('gIndex', droppingGIndex);
-    console.log('eIndex', droppingEIndex);
-    console.log(publicPouch);
+    console.log('id1',id1);
+    console.log('gIndexDragging', draggingGIndex);
+    console.log('eIndexDragging', draggingEIndex);
+    console.log('gIndexDropping', droppingGIndex);
+    console.log('eIndexDropping', droppingEIndex);
+    // console.log(publicPouch);
     console.log(groupBoard[parseInt(droppingGIndex)]);
     console.log(groupBoard[parseInt(droppingGIndex)][parseInt(droppingEIndex)]);
     publicPouch.forEach(item => {
@@ -512,11 +512,16 @@ const updateGroupBoard = () => {
             groupBoard[parseInt(droppingGIndex)][parseInt(droppingEIndex)] = item;
         }
     })
-    renderGroupBoard(groupBoard);
-    makeTileDraggable();
-    makeTileDroppable();
-    console.log("updatedGroupboard", groupBoard);
+    if (!!draggingGIndex) {
+        groupBoard[parseInt(draggingGIndex)][parseInt(draggingEIndex)] = "@";
+    } 
+    // if (condition) {
+        
+    // }
+    // updateRunboard();
+    // renderRunBoard(runBoard);
     
+    console.log("updatedGroupboard", groupBoard);
 }
 
 
@@ -526,6 +531,7 @@ const invalidHolder = () => {
     console.log('color2',color2);
     console.log('number2',number2);
     if ( color1 !== color2 || number1 !== number2) {
+        console.log('It is true!');
         return true;
     }
 }
@@ -533,7 +539,8 @@ const invalidHolder = () => {
 // $playerTile = $('.player-rack > div');
 // $runBoardHolder = $('.runs > .run > div');
 const updateRunboard =() => {
-    
+    console.log('updating runboard');
+
     if (!invalidHolder()) {
         //updateRunBoard
         console.log('updateRunboard!');
@@ -542,13 +549,20 @@ const updateRunboard =() => {
         let numToupdate = number1;
         let different = droppingLo.indexOf(id1) - droppingLo.indexOf(id2);
         let same = droppingLo.indexOf(id2) - droppingLo.indexOf(id1);
-        if( different === 3) {
+        console.log("draggingIndex", draggingIndex);
+        console.log("number1",cTI[number1]-1);
+        console.log("droppingIndex", droppingIndex);
+        console.log("number2",cTI[number2]-1);
+        console.log("numToupdate", numToupdate);
+        if( different === 3 ) {
+            console.log("getInDifferent!");
             if (draggingIndex < droppingIndex) {
+                console.log("draggingIndex < droppingIndex")
                 runBoard[droppingIndex] = setCharAt(runBoard[droppingIndex],cTI[number2]-1, numToupdate);
                 runBoard[draggingIndex] = setCharAt(runBoard[draggingIndex],cTI[number1]-1,"@");
             } else {    
                 runBoard[droppingIndex] = setCharAt(runBoard[droppingIndex],cTI[number2]-1, numToupdate);
-                runBoard[draggingIndex] = setCharAt(runBoard[draggingIndex],cTI[number1]-1,"@");
+                // runBoard[draggingIndex] = setCharAt(runBoard[draggingIndex],cTI[number1]-1,"@");
             } 
         } else if (same === 0) {
             console.log("getInsame!");
@@ -557,11 +571,34 @@ const updateRunboard =() => {
                 runBoard[droppingIndex] = setCharAt(runBoard[droppingIndex],cTI[number2]-1, numToupdate);
             } 
         }
-        renderRunBoard(runBoard);
-        makeTileDraggable();
-        makeTileDroppable();
         console.log("updateRunboard",runBoard);
+        console.log("updateGroupboard",groupBoard);
+    } 
+
+    //from
+    if (!draggingGIndex && !draggingEIndex) {
+        console.log(runBoard);
+        let draggingIndex = parseInt(id1[0])-1;
+        let droppingIndex = parseInt(id2[0])-1;
+        let numToupdate = number1;
+        console.log("draggingIndex", draggingIndex);
+        console.log("number1",cTI[number1]-1);
+        console.log("droppingIndex", droppingIndex);
+        console.log("number2",cTI[number2]-1);
+        console.log("numToupdate", numToupdate);
+        runBoard[draggingIndex] = setCharAt(runBoard[draggingIndex],cTI[number1]-1, "@");
     }
+
+    
+}
+
+const updatePlayGround = () => {
+    updateRunboard();
+    updateGroupBoard();
+    renderRunBoard(runBoard);
+    renderGroupBoard(groupBoard);
+    makeTileDraggable();
+    makeTileDroppable();
 }
 
 makeTileDraggable();
@@ -571,36 +608,87 @@ console.log(runBoard);
 
 
 const DoneValidation = () => {
+
+    //check runboard
     let checkArr = [];
     const regex = /\w+/g;
     for (let i = 0; i < runBoard.length; i++) {
         let run = runBoard[i].match(regex);
         if (run !== null) {
-            checkArr.push(runBoard[i].match(regex));
-        } 
-            
-                // checkArr.push(run[j]);
-            
-        
+            checkArr.push(run);
+        }
     }
+    
+    // checkArr.forEach(el => {
+    //     for (let i = 0; i < el.length; i++) {
+    //         console.log(el[i]);
+    //         if (el[i].length <3) {
+    //             console.log('runBoard failed, reverse!')
+    //             return false;
+    //         }
+    //     }
+    // })
     for (let i = 0; i < checkArr.length; i++) {
-        console.log('checkArr[i]',checkArr[i]);
-        // if (typeof checkArr[i] !== "string") {
-        //     checkArr.push(checkArr[i][0]);
-        //     checkArr.splice(i,1);
-        // }
-        // for (let j = 0; j < checkArr[i].length; j++) {
-        //     console.log('checkArr[i][j]',checkArr[i][j]);
-        //     if (checkArr[i][j].length < 3){
-        //         console.log("have to reverse");
-        //         return false;
-        //     }
-            
-        // }
+        for (let j = 0; j < checkArr[i].length; j++) {
+            console.log(checkArr[i][j]);
+            if (checkArr[i][j].length <3) {
+                console.log('runBoard failed, reverse!')
+                return false;
+            }
+        }
     }
     
     console.log('checkArr',checkArr);
+    console.log('runBoard pass the test!')
+
+    //check groupboard
+   let groupArr =[];
+    console.log('groupboard', groupBoard);
+    for (let i = 0; i < groupBoard.length; i++) {
+        //check the length
+        let innerArr = [];
+        for (let j = 0; j < groupBoard[i].length; j++) {
+            if (typeof groupBoard[i][j] === "object") {
+                innerArr.push(groupBoard[i][j]);
+            }
+        }
+        if (innerArr.length < 3 && innerArr.length > 0) {
+            console.log('groupboard failed at length!')
+            return false;
+        } 
+        //check the number, should be the dame
+        for (let j = 0; j < innerArr.length -1; j++) {
+            let el1n = innerArr[j].number;
+            let el2n = innerArr[j+1].number;
+
+            if (el1n !== el2n) {
+                console.log('groupboard failed at number!')
+                return false;
+            }
+        }
+        
+        //check the color
+        let color = ["1","2","3","4"];
+        for (let j = 0; j < innerArr.length; j++) {
+            console.log("color",color);
+            console.log("innerArr",innerArr);
+            let elc = `${innerArr[j].color}`;
+            if (color.indexOf(elc) !== -1) {
+                let index = color.indexOf(elc);
+                console.log("colorBefore",color);
+                color.splice(index ,0);
+                console.log("colorAfter",color);
+            } else {
+                console.log('groupboard failed at color!')
+                return false;
+            }
+        }
+    }
+
+    console.log(groupArr);
+    console.log('groupboard pass the test!');
+    return true;
 }
-DoneValidation();
+
 
 $('.done').on('click',DoneValidation);
