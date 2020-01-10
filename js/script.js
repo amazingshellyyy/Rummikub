@@ -642,11 +642,13 @@ const makeTileDroppable = () => {
     })
     
     $('.greyout').droppable({
-        drop: updatePlayGround
+        drop: updatePlayGround,
+        tolerance: "pointer"
     });
     
     $('.tile.faceback').droppable({
-        drop: updatePlayGround
+        drop: updatePlayGround,
+        tolerance: "pointer"
     })
     $('.tile.greyout').on('drop', function() {
         console.log("tilegreyout is droppable");
