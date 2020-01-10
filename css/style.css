@@ -148,7 +148,8 @@ body {
 }
 
 .start {
-    position: fixed;
+    z-index: 2;
+    position: absolute;
     height: 60vh;
     width: 60vw;
     top: 20vh;
